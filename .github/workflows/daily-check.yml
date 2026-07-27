@@ -1,0 +1,26 @@
+name: Daily vote check
+
+on:
+  schedule:
+    - cron: "30 20 * * 1-5"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: PYTHONPATH=src python fetch_scrutins.py --limit 3
+      - run: PYTHONPATH=src python verify_sources.py
+      - run: PYTHONPATH=src python generate_visual.py
+      - name: Upload generated cards
+        uses: actions/upload-artifact@v4
+        with:
+          name: vote-cards
+          path: outputs/*.png

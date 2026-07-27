@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+*.pyc
+work/*.zip
+work/latest_scrutins.json
+work/verification_report.json
+work/
+outputs/

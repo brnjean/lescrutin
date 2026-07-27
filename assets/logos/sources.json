@@ -1,0 +1,46 @@
+{
+  "LFI": {
+    "source": "Wikimedia Commons",
+    "page": "https://commons.wikimedia.org/wiki/File:LFI_Logo_2024.svg"
+  },
+  "ECOS": {
+    "source": "Wikimedia Commons",
+    "page": "https://commons.wikimedia.org/wiki/File:Logo_Les_%C3%89cologistes_(France).png"
+  },
+  "SOC": {
+    "source": "Wikipedia / Wikimedia file",
+    "page": "https://fr.wikipedia.org/wiki/Fichier:Logo_Parti_Socialiste_-_2024.svg"
+  },
+  "GDR": {
+    "source": "Wikimedia Commons",
+    "page": "https://commons.wikimedia.org/wiki/File:Logo_GDR.svg"
+  },
+  "LIOT": {
+    "source": "Site officiel du groupe LIOT",
+    "page": "https://www.groupeliot.fr/"
+  },
+  "DEM": {
+    "source": "Wikimedia Commons",
+    "page": "https://commons.wikimedia.org/wiki/File:MoDem_logo_2019.svg"
+  },
+  "EPR": {
+    "source": "Wikimedia Commons",
+    "page": "https://commons.wikimedia.org/wiki/File:Groupe_EPR.png"
+  },
+  "HOR": {
+    "source": "Wikimedia Commons",
+    "page": "https://commons.wikimedia.org/wiki/File:Logo_Parti_Politique_Horizons_-_2021.svg"
+  },
+  "DR": {
+    "source": "Wikimedia Commons",
+    "page": "https://commons.wikimedia.org/wiki/File:Les_R%C3%A9publicains_-_logo_(France,_2023).svg"
+  },
+  "RN": {
+    "source": "Wikimedia Commons",
+    "page": "https://commons.wikimedia.org/wiki/File:Groupe_RN_2024.png"
+  },
+  "UDR": {
+    "source": "Wikimedia Commons",
+    "page": "https://commons.wikimedia.org/wiki/File:UDR_group_logo.png"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "posts": [
+    {
+      "numero": 8434,
+      "uid": "VTANR5L17V8434",
+      "image_path": "outputs/scrutin-8434.png",
+      "public_path": "posts/scrutin-8434.png",
+      "public_url": null,
+      "staged_at": "2026-07-27T23:44:47.685599+00:00"
+    }
+  ]
+}

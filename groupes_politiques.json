@@ -1,0 +1,130 @@
+{
+  "meta": {
+    "legislature": 17,
+    "source": "Assemblee nationale open data, groupes politiques actifs",
+    "last_verified": "2026-07-28",
+    "note": "Ordre editorial gauche-droite. Les identifiants PO viennent de l'annuaire officiel AMO40."
+  },
+  "vote_colors": {
+    "pour": "#6E1423",
+    "contre": "#D9D0C1",
+    "abstention": "#8C6F52",
+    "non_votant": "#B9B0A4"
+  },
+  "layout_colors": {
+    "background": "#F2EBDF",
+    "grid": "#E4DACB",
+    "text": "#111111"
+  },
+  "groups": [
+    {
+      "id": "PO845413",
+      "sigle": "LFI",
+      "official_sigle": "LFI-NFP",
+      "nom": "La France insoumise - Nouveau Front Populaire",
+      "ordre": 10,
+      "logo_text": "LFI",
+      "logo_color": "#C00D0D"
+    },
+    {
+      "id": "PO845439",
+      "sigle": "ECOS",
+      "official_sigle": "ECOS",
+      "nom": "Ecologiste et Social",
+      "ordre": 20,
+      "logo_text": "ECO",
+      "logo_color": "#77AA79"
+    },
+    {
+      "id": "PO845419",
+      "sigle": "SOC",
+      "official_sigle": "SOC",
+      "nom": "Socialistes et apparentes",
+      "ordre": 30,
+      "logo_text": "PS",
+      "logo_color": "#F05A8A"
+    },
+    {
+      "id": "PO845514",
+      "sigle": "GDR",
+      "official_sigle": "GDR",
+      "nom": "Gauche Democrate et Republicaine",
+      "ordre": 40,
+      "logo_text": "GDR",
+      "logo_color": "#830E21"
+    },
+    {
+      "id": "PO845485",
+      "sigle": "LIOT",
+      "official_sigle": "LIOT",
+      "nom": "Libertes, Independants, Outre-mer et Territoires",
+      "ordre": 50,
+      "logo_text": "LIOT",
+      "logo_color": "#FFD96F"
+    },
+    {
+      "id": "PO845454",
+      "sigle": "DEM",
+      "official_sigle": "DEM",
+      "nom": "Les Democrates",
+      "ordre": 60,
+      "logo_text": "DEM",
+      "logo_color": "#F07E26"
+    },
+    {
+      "id": "PO845407",
+      "sigle": "EPR",
+      "official_sigle": "EPR",
+      "nom": "Ensemble pour la Republique",
+      "ordre": 70,
+      "logo_text": "EPR",
+      "logo_color": "#7B4591"
+    },
+    {
+      "id": "PO845470",
+      "sigle": "HOR",
+      "official_sigle": "HOR",
+      "nom": "Horizons & Independants",
+      "ordre": 80,
+      "logo_text": "HOR",
+      "logo_color": "#2F9FD7"
+    },
+    {
+      "id": "PO845425",
+      "sigle": "DR",
+      "official_sigle": "DR",
+      "nom": "Droite Republicaine",
+      "ordre": 90,
+      "logo_text": "LR",
+      "logo_color": "#316BB1"
+    },
+    {
+      "id": "PO845401",
+      "sigle": "RN",
+      "official_sigle": "RN",
+      "nom": "Rassemblement National",
+      "ordre": 100,
+      "logo_text": "RN",
+      "logo_color": "#1F4E8C"
+    },
+    {
+      "id": "PO872880",
+      "sigle": "UDR",
+      "official_sigle": "UDDPLR",
+      "nom": "Union des droites pour la Republique",
+      "ordre": 110,
+      "logo_text": "UDR",
+      "logo_color": "#3367A7"
+    },
+    {
+      "id": "PO840056",
+      "sigle": "non-inscrits",
+      "official_sigle": "NI",
+      "nom": "Non inscrits",
+      "ordre": 120,
+      "logo_text": "non-inscrits",
+      "logo_color": "#8D949A",
+      "optional": true
+    }
+  ]
+}
