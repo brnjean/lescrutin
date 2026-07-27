@@ -1,6 +1,7 @@
 {
   "meta": {
     "legislature": 17,
+    "account_handle": "@lescrutin",
     "source": "Assemblee nationale open data, groupes politiques actifs",
     "last_verified": "2026-07-28",
     "note": "Ordre editorial gauche-droite. Les identifiants PO viennent de l'annuaire officiel AMO40."

@@ -2,6 +2,8 @@
 
 Pipeline local pour transformer les scrutins publics de l'Assemblee nationale en cartes Instagram factuelles.
 
+Compte Instagram cible: `@lescrutin`.
+
 ## Etape 1 - Recuperation et visuel local
 
 ```bash

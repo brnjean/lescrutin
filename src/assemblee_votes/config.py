@@ -22,6 +22,7 @@ class ProjectConfig:
     groups: list[GroupConfig]
     vote_colors: dict[str, str]
     layout_colors: dict[str, str]
+    account_handle: str
 
     @property
     def groups_by_id(self) -> dict[str, GroupConfig]:
@@ -35,4 +36,5 @@ def load_config(path: str | Path = "groupes_politiques.json") -> ProjectConfig:
         groups=sorted(groups, key=lambda group: group.ordre),
         vote_colors=data["vote_colors"],
         layout_colors=data["layout_colors"],
+        account_handle=data.get("meta", {}).get("account_handle", "@lescrutin"),
     )

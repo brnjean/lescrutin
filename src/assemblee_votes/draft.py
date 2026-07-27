@@ -23,6 +23,7 @@ def build_caption(scrutin: dict[str, Any]) -> str:
             f"Scrutin n°{scrutin['numero']} - {scrutin['date']}",
             title,
             f"Source : Assemblee nationale - {scrutin['source_url']}",
+            "@lescrutin",
             "#AssembleeNationale #Politique #Datajournalisme #Vote #France",
         ]
     )

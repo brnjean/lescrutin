@@ -231,7 +231,7 @@ def draw_card(scrutin: dict[str, Any], output: str | Path, config_path: str | Pa
     for line in _wrap(draw, footer, footer_font, SIZE - 2 * MARGIN, 2):
         draw.text((MARGIN, footer_y), line, fill=layout["text"], font=footer_font)
         footer_y += 26
-    draw.text((MARGIN, 1020), "@compte-a-definir", fill=colors["pour"], font=small_font)
+    draw.text((MARGIN, 1020), config.account_handle, fill=colors["pour"], font=small_font)
 
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
