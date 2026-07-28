@@ -12,7 +12,8 @@ from typing import Any
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 from .fetch import _is_significant, _scrutin_number_from_name, normalize_scrutin
-from .stages import STAGE_ORDER, stage_label, stage_note
+from .descriptions import law_description
+from .stages import STAGE_ORDER, stage_label
 from .titles import editorial_title
 from .verify import verify_scrutin
 
@@ -314,8 +315,8 @@ def draw_vote_slide(
     draw.text((MARGIN, y), f"Écart pour/contre : {margin} voix", fill="#5E5144", font=small_font)
     y += 62
 
-    note = stage_note(scrutin.get("stage_id"))
-    _draw_wrapped(draw, (MARGIN, y), note, body_font, TEXT, SIZE - 2 * MARGIN, 38, 4)
+    description = law_description(scrutin)
+    _draw_wrapped(draw, (MARGIN, y), description, body_font, TEXT, SIZE - 2 * MARGIN, 38, 4)
 
     source = f"Source : Assemblée nationale, scrutin public n°{scrutin['numero']}"
     draw.text((MARGIN, SIZE - 104), source, fill="#5E5144", font=small_font)
@@ -459,6 +460,7 @@ def create_weekly_carousel(
                 "numero": scrutin["numero"],
                 "date": scrutin["date"],
                 "title": editorial_title(scrutin),
+                "description": law_description(scrutin),
                 "stage_id": scrutin.get("stage_id"),
                 "stage_label": stage_label(scrutin.get("stage_id")),
                 "source_url": scrutin["source_url"],
