@@ -5,6 +5,7 @@ import io
 import json
 import re
 import sys
+import unicodedata
 import urllib.request
 import zipfile
 from dataclasses import asdict, dataclass
@@ -20,13 +21,13 @@ SCRUTINS_JSON_ZIP_URL = (
 )
 
 
-SIGNIFICANT_TYPE_CODES = {"SPS"}
-SIGNIFICANT_TITLE_PATTERNS = (
+FINAL_READING_PATTERN = "lecture definitive"
+WHOLE_TEXT_PATTERNS = (
     "ensemble du projet de loi",
     "ensemble de la proposition de loi",
-    "motion de censure",
-    "motion de rejet",
-    "texte de la commission mixte paritaire",
+    "ensemble d'une proposition de loi",
+    "ensemble de la proposition de loi organique",
+    "ensemble du projet de loi organique",
 )
 
 
@@ -85,12 +86,19 @@ def _scrutin_number_from_name(name: str) -> int:
     return int(match.group(1))
 
 
+def _normalized_text(value: str) -> str:
+    text = unicodedata.normalize("NFKD", value.lower())
+    text = "".join(char for char in text if not unicodedata.combining(char))
+    return text.replace("’", "'")
+
+
 def _is_significant(scrutin: dict[str, Any]) -> bool:
-    type_code = scrutin["typeVote"].get("codeTypeVote")
-    title = f"{scrutin.get('titre', '')} {scrutin.get('objet', {}).get('libelle', '')}".lower()
-    if type_code in SIGNIFICANT_TYPE_CODES:
-        return True
-    return any(pattern in title for pattern in SIGNIFICANT_TITLE_PATTERNS)
+    title = _normalized_text(
+        f"{scrutin.get('titre', '')} {scrutin.get('objet', {}).get('libelle', '')}"
+    )
+    return FINAL_READING_PATTERN in title and any(
+        pattern in title for pattern in WHOLE_TEXT_PATTERNS
+    )
 
 
 def normalize_scrutin(scrutin_doc: dict[str, Any], config_path: str | Path) -> ScrutinSummary:

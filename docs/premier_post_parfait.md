@@ -19,8 +19,13 @@ git status
 
 Deux options:
 
-- utiliser le dernier scrutin significatif disponible;
+- utiliser le dernier scrutin en lecture definitive disponible;
 - choisir manuellement un scrutin precis si on veut un premier post plus fort editorialement.
+
+Regle editoriale `@lescrutin`:
+
+- on publie uniquement les votes en lecture definitive sur l'ensemble du texte;
+- on ne publie pas automatiquement les textes de CMP, motions, amendements, articles ou lectures intermediaires.
 
 Commandes:
 

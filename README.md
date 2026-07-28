@@ -51,6 +51,12 @@ PYTHONPATH=src python stage_public_asset.py \
   --public-base-url https://ton-utilisateur.github.io/ton-repo
 ```
 
+## Surveillance automatique
+
+GitHub Actions lance le controle automatiquement tous les 3 jours a `06:30 UTC`, soit environ `08:30` en France l'ete. Ton ordinateur peut etre ferme: GitHub execute le robot sur ses propres serveurs.
+
+Tu peux aussi lancer le controle manuellement depuis GitHub: onglet `Actions`, workflow `Vote check every 3 days`, bouton `Run workflow`.
+
 ## Publication Instagram
 
 Voir [docs/instagram_setup.md](docs/instagram_setup.md).
@@ -86,7 +92,8 @@ PYTHONPATH=src python publish_instagram.py \
 
 - Couleurs fixes: pour, contre, abstention.
 - Ordre gauche-droite centralise dans `groupes_politiques.json`.
-- Filtre de significativite initial: scrutins publics solennels, votes sur l'ensemble, CMP, motions de censure ou de rejet.
+- Filtre editorial: publication automatique uniquement pour les votes en lecture definitive sur l'ensemble du texte.
+- Les votes intermediaires, textes de CMP, motions, amendements et votes d'article sont ignores par defaut.
 - Etat anti-doublon: `published.json`.
 - Garde-fou avant publication: `verify_sources.py` compare les totaux locaux avec la page officielle du scrutin sur assemblee-nationale.fr et bloque la suite en cas d'ecart.
 

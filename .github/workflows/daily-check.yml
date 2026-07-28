@@ -1,8 +1,8 @@
-name: Daily vote check
+name: Vote check every 3 days
 
 on:
   schedule:
-    - cron: "30 20 * * 1-5"
+    - cron: "30 6 */3 * *"
   workflow_dispatch:
 
 jobs:
