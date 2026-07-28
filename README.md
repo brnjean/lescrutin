@@ -55,6 +55,13 @@ PYTHONPATH=src python stage_public_asset.py \
 
 Voir [docs/instagram_setup.md](docs/instagram_setup.md).
 
+Tester une cle Meta/Instagram sans l'ecrire dans le depot:
+
+```bash
+export META_ACCESS_TOKEN="COLLER_LE_TOKEN_ICI"
+PYTHONPATH=src python inspect_instagram_token.py
+```
+
 Resume: Instagram ne peut pas publier directement `outputs/scrutin-XXXX.png` depuis ton ordinateur. Il faut d'abord une URL publique HTTPS pour l'image, puis:
 
 ```bash

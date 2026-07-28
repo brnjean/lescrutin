@@ -54,6 +54,13 @@ Le script accepte les deux modeles via `PUBLIC_BASE_URL`.
 
 ## Commandes locales
 
+Tester le token:
+
+```bash
+export META_ACCESS_TOKEN="COLLER_LE_TOKEN_ICI"
+PYTHONPATH=src python inspect_instagram_token.py
+```
+
 Preparation:
 
 ```bash
