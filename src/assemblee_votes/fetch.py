@@ -5,7 +5,6 @@ import io
 import json
 import re
 import sys
-import unicodedata
 import urllib.request
 import zipfile
 from dataclasses import asdict, dataclass
@@ -13,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from .config import load_config
+from .stages import combined_scrutin_text, stage_id, stage_label, stage_note
 
 
 SCRUTINS_JSON_ZIP_URL = (
@@ -21,7 +21,6 @@ SCRUTINS_JSON_ZIP_URL = (
 )
 
 
-FINAL_READING_PATTERN = "lecture definitive"
 WHOLE_TEXT_PATTERNS = (
     "ensemble du projet de loi",
     "ensemble de la proposition de loi",
@@ -55,6 +54,9 @@ class ScrutinSummary:
     type_vote: str
     type_vote_code: str
     sort: str
+    stage_id: str | None
+    stage_label: str
+    stage_note: str
     source_url: str
     significant: bool
     totals: dict[str, int]
@@ -86,19 +88,9 @@ def _scrutin_number_from_name(name: str) -> int:
     return int(match.group(1))
 
 
-def _normalized_text(value: str) -> str:
-    text = unicodedata.normalize("NFKD", value.lower())
-    text = "".join(char for char in text if not unicodedata.combining(char))
-    return text.replace("’", "'")
-
-
 def _is_significant(scrutin: dict[str, Any]) -> bool:
-    title = _normalized_text(
-        f"{scrutin.get('titre', '')} {scrutin.get('objet', {}).get('libelle', '')}"
-    )
-    return FINAL_READING_PATTERN in title and any(
-        pattern in title for pattern in WHOLE_TEXT_PATTERNS
-    )
+    text = combined_scrutin_text(scrutin)
+    return stage_id(scrutin) is not None and any(pattern in text for pattern in WHOLE_TEXT_PATTERNS)
 
 
 def normalize_scrutin(scrutin_doc: dict[str, Any], config_path: str | Path) -> ScrutinSummary:
@@ -148,6 +140,7 @@ def normalize_scrutin(scrutin_doc: dict[str, Any], config_path: str | Path) -> S
     decompte = scrutin["syntheseVote"]["decompte"]
     numero = int(scrutin["numero"])
     dossier = scrutin.get("objet", {}).get("dossierLegislatif") or {}
+    stage = stage_id(scrutin)
     return ScrutinSummary(
         uid=scrutin["uid"],
         numero=numero,
@@ -158,6 +151,9 @@ def normalize_scrutin(scrutin_doc: dict[str, Any], config_path: str | Path) -> S
         type_vote=scrutin["typeVote"].get("libelleTypeVote") or "",
         type_vote_code=scrutin["typeVote"].get("codeTypeVote") or "",
         sort=scrutin["sort"].get("libelle") or "",
+        stage_id=stage,
+        stage_label=stage_label(stage),
+        stage_note=stage_note(stage),
         source_url=f"https://www.assemblee-nationale.fr/dyn/17/scrutins/{numero}",
         significant=_is_significant(scrutin),
         totals={

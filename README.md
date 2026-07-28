@@ -57,7 +57,8 @@ GitHub Actions lance le robot automatiquement tous les 3 jours a `06:30 UTC`, so
 
 Le robot:
 
-- cherche le dernier scrutin en lecture definitive non publie;
+- cherche le dernier scrutin publiable non publie;
+- accepte trois niveaux: lecture definitive, texte de CMP, nouvelle lecture;
 - ignore les scrutins anterieurs au `28 juillet 2026`, pour ne pas publier l'ancien historique;
 - verifie les chiffres avec la source officielle;
 - genere l'image et la legende;
@@ -65,7 +66,7 @@ Le robot:
 - publie sur Instagram;
 - marque le scrutin comme publie dans `published.json`.
 
-Tu peux aussi lancer le controle manuellement depuis GitHub: onglet `Actions`, workflow `Auto publish final readings`, bouton `Run workflow`.
+Tu peux aussi lancer le controle manuellement depuis GitHub: onglet `Actions`, workflow `Auto publish key votes`, bouton `Run workflow`.
 
 Secrets GitHub necessaires:
 
@@ -108,8 +109,9 @@ PYTHONPATH=src python publish_instagram.py \
 - Couleurs fixes: pour, contre, abstention.
 - Ordre gauche-droite centralise dans `groupes_politiques.json`.
 - Titres courts: verbe clair + objet concret de la loi, sans jugement politique.
-- Filtre editorial: publication automatique uniquement pour les votes en lecture definitive sur l'ensemble du texte.
-- Les votes intermediaires, textes de CMP, motions, amendements et votes d'article sont ignores par defaut.
+- Filtre editorial: publication automatique pour les votes sur l'ensemble du texte en lecture definitive, texte de CMP ou nouvelle lecture.
+- Chaque post affiche l'etape du texte et la legende explique si le vote n'est pas encore une adoption definitive.
+- Les premieres lectures, deuxiemes lectures, motions, amendements et votes d'article sont ignores par defaut.
 - Etat anti-doublon: `published.json`.
 - Garde-fou avant publication: `verify_sources.py` compare les totaux locaux avec la page officielle du scrutin sur assemblee-nationale.fr et bloque la suite en cas d'ecart.
 

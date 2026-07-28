@@ -9,6 +9,7 @@ from typing import Any
 from PIL import Image, ImageDraw, ImageFont
 
 from .config import load_config
+from .stages import stage_label
 from .titles import image_title
 
 
@@ -68,7 +69,7 @@ def _short_title(scrutin: dict[str, Any]) -> str:
 
 
 def _subtitle(scrutin: dict[str, Any]) -> str:
-    return f"{scrutin['type_vote'].capitalize()} n°{scrutin['numero']} du {scrutin['date']} - {scrutin['sort']}."
+    return f"{stage_label(scrutin.get('stage_id'))} n°{scrutin['numero']} du {scrutin['date']} - {scrutin['sort']}."
 
 
 def _load_logo(sigle: str) -> Image.Image | None:

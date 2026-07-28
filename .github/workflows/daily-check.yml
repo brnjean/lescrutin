@@ -1,4 +1,4 @@
-name: Auto publish final readings
+name: Auto publish key votes
 
 on:
   schedule:

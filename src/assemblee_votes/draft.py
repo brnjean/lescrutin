@@ -7,26 +7,40 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from .stages import stage_label, stage_note
 from .titles import editorial_title
 from .verify import verify_scrutin
 from .visual import draw_card
 
 
-def build_caption(scrutin: dict[str, Any]) -> str:
-    result = (
-        f"Le scrutin a été adopté avec {scrutin['totals']['pour']} voix pour, "
+def _result_line(scrutin: dict[str, Any]) -> str:
+    sort = (scrutin.get("sort") or "").lower()
+    if "adopt" in sort:
+        result = "L'Assemblée nationale a adopté ce texte"
+    elif "rejet" in sort:
+        result = "L'Assemblée nationale a rejeté ce texte"
+    else:
+        result = "L'Assemblée nationale s'est prononcée sur ce texte"
+    return (
+        f"{result} avec {scrutin['totals']['pour']} voix pour, "
         f"{scrutin['totals']['contre']} contre et {scrutin['totals']['abstention']} abstention(s)."
     )
+
+
+def build_caption(scrutin: dict[str, Any]) -> str:
     title = editorial_title(scrutin)
+    stage = scrutin.get("stage_id")
     return "\n\n".join(
-        [
-            result,
+        [part for part in [
+            _result_line(scrutin),
             f"Scrutin n°{scrutin['numero']} - {scrutin['date']}",
+            f"Étape : {stage_label(stage)}",
             title,
+            stage_note(stage),
             f"Source : Assemblée nationale - {scrutin['source_url']}",
             "@lescrutin",
             "#AssembleeNationale #Politique #Datajournalisme #Vote #France",
-        ]
+        ] if part]
     )
 
 
@@ -55,6 +69,9 @@ def create_draft(
             "numero": scrutin["numero"],
             "date": scrutin["date"],
             "title_for_image": editorial_title(scrutin),
+            "stage_id": scrutin.get("stage_id"),
+            "stage_label": stage_label(scrutin.get("stage_id")),
+            "stage_note": stage_note(scrutin.get("stage_id")),
             "source_url": scrutin["source_url"],
             "totals": scrutin["totals"],
         },

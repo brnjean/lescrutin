@@ -83,7 +83,7 @@ def main() -> None:
 
     if not selected:
         print(
-            "Aucun nouveau scrutin en lecture définitive à publier "
+            "Aucun nouveau scrutin publiable "
             f"depuis le {args.since_date}."
         )
         _write_github_outputs({"has_post": "false"})
