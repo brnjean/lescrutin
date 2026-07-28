@@ -1,6 +1,9 @@
 name: Prepare/publish weekly carousel
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     - cron: "30 7 * * 1"
   workflow_dispatch:
@@ -11,6 +14,7 @@ concurrency:
 
 jobs:
   publish-weekly:
+    if: github.event_name != 'push' || contains(github.event.head_commit.message, '[publish-weekly-now]')
     runs-on: ubuntu-latest
     permissions:
       contents: write

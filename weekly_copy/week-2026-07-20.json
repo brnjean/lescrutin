@@ -1,0 +1,103 @@
+{
+  "week_id": "week-2026-07-20",
+  "week_start": "2026-07-20",
+  "week_end": "2026-07-26",
+  "instructions": "Descriptions generees depuis des sources publiques et verifiees par garde-fou. Le flux automatique bloque si aucune synthese fiable n'est disponible.",
+  "items": [
+    {
+      "numero": 8434,
+      "date": "2026-07-21",
+      "title": "Moderniser le patrimoine immobilier de l'État",
+      "stage_label": "Texte de CMP",
+      "source_url": "https://www.assemblee-nationale.fr/dyn/17/scrutins/8434",
+      "description_sources": [
+        "https://www.assemblee-nationale.fr/dyn/17/dossiers/DLR5L17N52746",
+        "https://www.vie-publique.fr/loi/301991-gestion-du-patrimoine-immobilier-de-letat-proposition-de-loi"
+      ],
+      "description_method": "curated_from_sources",
+      "description": "Le texte réforme la gestion des bureaux, bâtiments et terrains appartenant à l'État. Il crée une foncière publique chargée de gérer, rénover, louer, valoriser ou vendre une partie du patrimoine immobilier. L'enjeu est de rendre ce parc plus efficace, notamment sur les coûts, l'usage des locaux et la rénovation."
+    },
+    {
+      "numero": 8433,
+      "date": "2026-07-21",
+      "title": "Répondre aux troubles à l'ordre public",
+      "stage_label": "Texte de CMP",
+      "source_url": "https://www.assemblee-nationale.fr/dyn/17/scrutins/8433",
+      "description_sources": [
+        "https://www.assemblee-nationale.fr/dyn/17/dossiers/DLR5L17N53980",
+        "https://www.vie-publique.fr/loi/302565-projet-de-loi-ripost-ordre-public-securite-et-tranquillite",
+        "https://www.interieur.gouv.fr/actualites/dossiers-de-presse/presentation-du-projet-de-loi-ripost"
+      ],
+      "description_method": "curated_from_sources",
+      "description": "Le projet de loi RIPOST vise à répondre plus vite à certains faits troublant l'ordre public, la sécurité ou la tranquillité. Il renforce l'arsenal juridique autour de sanctions, procédures et moyens d'action des autorités. L'enjeu est l'équilibre entre efficacité de la réponse publique et garanties attachées aux libertés individuelles."
+    },
+    {
+      "numero": 8431,
+      "date": "2026-07-21",
+      "title": "Protéger les mineurs sur les réseaux sociaux",
+      "stage_label": "Texte de CMP",
+      "source_url": "https://www.assemblee-nationale.fr/dyn/17/scrutins/8431",
+      "description_sources": [
+        "https://www.assemblee-nationale.fr/dyn/17/dossiers/proteger_mineurs_reseaux_sociaux_17e",
+        "https://www.vie-publique.fr/loi/301799-proteger-les-mineurs-risques-des-reseaux-sociaux-proposition-de-loi",
+        "https://www.senat.fr/travaux-parlementaires/textes-legislatifs/la-loi-en-clair/proposition-de-loi-visant-a-proteger-les-mineurs-des-risques-auxquels-les-expose-lutilisation-des-reseaux-sociaux.html"
+      ],
+      "description_method": "curated_from_sources",
+      "description": "Le texte vise à limiter l'exposition des mineurs aux risques liés aux réseaux sociaux. Il encadre l'accès des plus jeunes, les usages des adolescents et certaines pratiques publicitaires ciblant les mineurs. L'enjeu est de renforcer la protection des enfants tout en imposant de nouvelles obligations aux plateformes."
+    },
+    {
+      "numero": 8427,
+      "date": "2026-07-20",
+      "title": "Protéger la souveraineté agricole",
+      "stage_label": "Texte de CMP",
+      "source_url": "https://www.assemblee-nationale.fr/dyn/17/scrutins/8427",
+      "description_sources": [
+        "https://www.assemblee-nationale.fr/dyn/17/dossiers/projet_loi_urgence_pour_protection_et_souverainete_agricoles",
+        "https://www.senat.fr/travaux-parlementaires/textes-legislatifs/la-loi-en-clair/urgence-agricole.html",
+        "https://agriculture.gouv.fr/lassemblee-nationale-adopte-le-projet-de-loi-durgence-agricole"
+      ],
+      "description_method": "curated_from_sources",
+      "description": "Ce projet de loi d'urgence porte sur la protection de la souveraineté agricole et alimentaire. Il cherche à soutenir les filières, sécuriser certaines productions et répondre aux difficultés économiques ou réglementaires du monde agricole. L'enjeu est de renforcer la capacité de production française tout en arbitrant entre compétitivité, normes et protection de l'environnement."
+    },
+    {
+      "numero": 8421,
+      "date": "2026-07-20",
+      "title": "Adapter la loi aux territoires de montagne",
+      "stage_label": "Texte de CMP",
+      "source_url": "https://www.assemblee-nationale.fr/dyn/17/scrutins/8421",
+      "description_sources": [
+        "https://www.assemblee-nationale.fr/dyn/17/dossiers/DLR5L17N54006",
+        "https://www.senat.fr/travaux-parlementaires/textes-legislatifs/la-loi-en-clair/proposition-de-loi-pour-une-montagne-vivante-et-souveraine.html"
+      ],
+      "description_method": "curated_from_sources",
+      "description": "La proposition actualise la loi Montagne pour l'adapter aux réalités actuelles des territoires d'altitude. Elle touche à l'accès aux services publics, à l'urbanisme, à l'eau, à l'agriculture, à la forêt et au tourisme. L'enjeu est de maintenir des territoires habités et actifs tout en tenant compte des contraintes climatiques et environnementales."
+    },
+    {
+      "numero": 8419,
+      "date": "2026-07-20",
+      "title": "Lutter contre les maladies cardio-neuro-vasculaires",
+      "stage_label": "Texte de CMP",
+      "source_url": "https://www.assemblee-nationale.fr/dyn/17/scrutins/8419",
+      "description_sources": [
+        "https://www.assemblee-nationale.fr/dyn/17/dossiers/DLR5L17N53426",
+        "https://www.senat.fr/cra/s20260709/s20260709_3.html",
+        "https://www.vie-publique.fr/loi/303718-prevention-maladies-cardio-neuro-vasculaire-loi-neuder-27-juillet-2026"
+      ],
+      "description_method": "curated_from_sources",
+      "description": "Le texte crée une stratégie nationale contre les maladies cardio-neuro-vasculaires, comme les infarctus ou AVC. Il met l'accent sur la prévention, les dépistages à différents âges de la vie et le rôle de plusieurs professionnels de santé. L'enjeu est d'agir plus tôt sur des maladies fréquentes, coûteuses et souvent évitables."
+    },
+    {
+      "numero": 8418,
+      "date": "2026-07-20",
+      "title": "Organiser le sport professionnel",
+      "stage_label": "Texte de CMP",
+      "source_url": "https://www.assemblee-nationale.fr/dyn/17/scrutins/8418",
+      "description_sources": [
+        "https://www.assemblee-nationale.fr/dyn/17/dossiers/DLR5L17N51732",
+        "https://www.vie-publique.fr/loi/298987-sport-professionnel-foot-organisation-et-financement-proposition-de-loi"
+      ],
+      "description_method": "curated_from_sources",
+      "description": "La proposition de loi porte sur l'organisation, la gestion et le financement du sport professionnel. Elle vise notamment la gouvernance des clubs et des ligues, ainsi que l'encadrement de certains équilibres économiques. L'enjeu est de mieux structurer le sport professionnel sans le réduire au seul football."
+    }
+  ]
+}
