@@ -75,7 +75,7 @@ Secrets GitHub necessaires:
 
 ## Carrousel hebdomadaire
 
-Le carrousel hebdomadaire est semi-automatique: le robot choisit les votes cles, puis tu ecris les textes de chaque loi.
+Le carrousel hebdomadaire est automatique: le robot choisit les votes cles, recupere les syntheses de lois sur `programmescandidats.fr`, puis publie le carrousel.
 
 - couverture editoriale;
 - une slide par texte;
@@ -90,16 +90,15 @@ Generation locale:
 PYTHONPATH=src python prepare_weekly_carousel.py
 ```
 
-Cette commande cree aussi un fichier du type:
+Cette commande cree aussi un fichier de trace du type:
 
 ```text
 weekly_copy/week-YYYY-MM-DD.json
 ```
 
-Dans ce fichier, remplis chaque champ `description` avec tes 2-3 lignes. Puis regenere le carrousel pour intégrer tes textes:
+Ce fichier contient les descriptions recuperees automatiquement. Si une description manque, le robot bloque au lieu d'inventer un texte.
 
 ```bash
-PYTHONPATH=src python prepare_weekly_carousel.py
 PYTHONPATH=src python stage_weekly_carousel.py \
   --draft outputs/weekly/week-YYYY-MM-DD/draft-week-YYYY-MM-DD.json \
   --public-base-url https://brnjean.github.io/lescrutin
@@ -112,7 +111,7 @@ PYTHONPATH=src python publish_instagram_carousel.py \
   --draft outputs/weekly/week-YYYY-MM-DD/draft-week-YYYY-MM-DD.json
 ```
 
-Le robot bloque la mise en ligne si une description est vide. Le workflow GitHub `Prepare/publish weekly carousel` se lance manuellement depuis l'onglet `Actions`.
+Le robot bloque la mise en ligne si une description est vide. Le workflow GitHub `Prepare/publish weekly carousel` se lance chaque lundi et peut aussi etre lance manuellement depuis l'onglet `Actions`.
 
 ## Publication Instagram
 
@@ -152,6 +151,7 @@ PYTHONPATH=src python publish_instagram.py \
 - Titres courts: verbe clair + objet concret de la loi, sans jugement politique.
 - Filtre editorial: publication automatique pour les votes sur l'ensemble du texte en lecture definitive, texte de CMP ou nouvelle lecture.
 - Chaque post affiche l'etape du texte et la legende explique si le vote n'est pas encore une adoption definitive.
+- Les carrousels hebdomadaires utilisent les syntheses de `programmescandidats.fr` quand elles existent, sans reformulation automatique.
 - Les premieres lectures, deuxiemes lectures, motions, amendements et votes d'article sont ignores par defaut.
 - Etat anti-doublon: `published.json`.
 - Garde-fou avant publication: `verify_sources.py` compare les totaux locaux avec la page officielle du scrutin sur assemblee-nationale.fr et bloque la suite en cas d'ecart.

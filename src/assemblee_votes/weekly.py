@@ -405,7 +405,7 @@ def build_weekly_caption(start: date, end: date, scrutins: list[dict[str, Any]])
             "",
             "Un vote clé ne signifie pas toujours que la loi est définitivement adoptée : l'étape est indiquée sur chaque slide.",
             "",
-            "Source : Assemblée nationale",
+            "Sources : Assemblée nationale (votes) ; programmescandidats.fr (synthèses)",
             "@lescrutin",
             "#AssembleeNationale #Politique #France #Datajournalisme #Parlement",
         ]

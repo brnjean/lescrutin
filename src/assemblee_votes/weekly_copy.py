@@ -5,14 +5,14 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+from .programmescandidats import fetch_scrutin_explanation
 from .stages import stage_label
 from .titles import editorial_title
 
 
 COPY_INSTRUCTIONS = (
-    "Remplis chaque champ description en 2-3 lignes simples. "
-    "Explique concretement ce que fait le texte. "
-    "Ne repete pas l'etape du vote: elle est deja expliquee dans le carrousel."
+    "Descriptions recuperees automatiquement depuis programmescandidats.fr. "
+    "Ne pas modifier ce fichier pour le flux automatique."
 )
 
 
@@ -40,16 +40,12 @@ def load_or_create_weekly_copy(
     scrutins: list[dict[str, Any]],
 ) -> tuple[Path, dict[str, Any], list[int]]:
     path = weekly_copy_path(copy_dir, week_start)
-    existing: dict[str, Any] = {}
-    if path.exists():
-        existing = json.loads(path.read_text(encoding="utf-8"))
-    descriptions = _existing_descriptions(existing)
-
     items = []
     missing: list[int] = []
     for scrutin in scrutins:
         numero = int(scrutin["numero"])
-        description = descriptions.get(numero, "")
+        explanation = fetch_scrutin_explanation(numero)
+        description = explanation.description if explanation else ""
         if not description:
             missing.append(numero)
         items.append(
@@ -59,6 +55,7 @@ def load_or_create_weekly_copy(
                 "title": editorial_title(scrutin),
                 "stage_label": stage_label(scrutin.get("stage_id")),
                 "source_url": scrutin["source_url"],
+                "description_source": explanation.url if explanation else "",
                 "description": description,
             }
         )

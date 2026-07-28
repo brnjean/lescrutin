@@ -53,6 +53,14 @@ def main() -> None:
         max_vote_slides=args.max_vote_slides,
     )
     draft = json.loads(Path(draft_path).read_text(encoding="utf-8"))
+    if draft.get("missing_copy"):
+        print(
+            "Carrousel hebdomadaire non publiable: syntheses manquantes pour les scrutins "
+            + ", ".join(str(numero) for numero in draft["missing_copy"])
+        )
+        _write_github_outputs({"has_carousel": "false"})
+        return
+
     if draft["week_start"] < WEEKLY_AUTO_SINCE_DATE:
         print(f"Semaine ignoree avant la date de depart: {draft['week_id']}")
         _write_github_outputs({"has_carousel": "false"})
