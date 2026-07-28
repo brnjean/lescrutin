@@ -9,6 +9,7 @@ from typing import Any
 from PIL import Image, ImageDraw, ImageFont
 
 from .config import load_config
+from .titles import image_title
 
 
 SIZE = 1080
@@ -63,14 +64,7 @@ def _wrap(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.ImageFont, max_w
 
 
 def _short_title(scrutin: dict[str, Any]) -> str:
-    dossier = scrutin.get("dossier")
-    if dossier and dossier.lower() == "fin de vie":
-        return "CRÉER UN DROIT À L'AIDE À MOURIR"
-    if dossier:
-        return dossier.upper()
-    title = scrutin["titre"]
-    title = title.replace("l'ensemble du ", "").replace("sur ", "")
-    return title.upper()
+    return image_title(scrutin)
 
 
 def _subtitle(scrutin: dict[str, Any]) -> str:

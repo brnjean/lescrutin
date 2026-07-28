@@ -80,14 +80,25 @@ def _sha256_file(path: str | Path) -> str:
     return _sha256_bytes(Path(path).read_bytes())
 
 
-def _verify_public_image_matches_draft(draft: dict[str, Any], image_url: str) -> None:
+def _verify_public_image_matches_draft(
+    draft: dict[str, Any], image_url: str, attempts: int = 24, delay_seconds: int = 5
+) -> None:
     local_hash = _sha256_file(draft["image_path"])
-    public_hash = _sha256_bytes(_download_bytes(image_url))
-    if local_hash != public_hash:
-        raise SystemExit(
-            "Publication bloquee: l'image publique ne correspond pas a l'image locale validee. "
-            "Regenerer, stage_public_asset.py, git push, attendre GitHub Actions vert, puis retester."
-        )
+    last_error = ""
+    for attempt in range(1, attempts + 1):
+        try:
+            public_hash = _sha256_bytes(_download_bytes(image_url))
+            if local_hash == public_hash:
+                return
+            last_error = "l'image publique ne correspond pas a l'image locale validee"
+        except RuntimeError as exc:
+            last_error = str(exc)
+        if attempt < attempts:
+            time.sleep(delay_seconds)
+    raise SystemExit(
+        "Publication bloquee: image publique non valide apres attente. "
+        f"Derniere erreur: {last_error}"
+    )
 
 
 def _load_draft(path: str | Path) -> dict[str, Any]:

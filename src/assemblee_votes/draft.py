@@ -7,15 +7,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from .titles import editorial_title
 from .verify import verify_scrutin
 from .visual import draw_card
-
-
-def editorial_title(scrutin: dict[str, Any]) -> str:
-    dossier = scrutin.get("dossier")
-    if dossier and dossier.lower() == "fin de vie":
-        return "Créer un droit à l'aide à mourir"
-    return dossier or scrutin.get("objet") or scrutin["titre"]
 
 
 def build_caption(scrutin: dict[str, Any]) -> str:

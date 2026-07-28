@@ -194,6 +194,7 @@ def select_scrutins_from_zip(
     limit: int,
     include_already_published: bool = False,
     numero: int | None = None,
+    since_date: str | None = None,
 ) -> list[ScrutinSummary]:
     selected: list[ScrutinSummary] = []
     with zipfile.ZipFile(io.BytesIO(zip_bytes)) as archive:
@@ -209,6 +210,8 @@ def select_scrutins_from_zip(
             if numero is not None and int(scrutin["numero"]) != numero:
                 continue
             if numero is None:
+                if since_date and scrutin["dateScrutin"] < since_date:
+                    continue
                 if scrutin["uid"] in published and not include_already_published:
                     continue
                 if not _is_significant(scrutin):
@@ -247,6 +250,7 @@ def main() -> None:
     parser.add_argument("--output", default="work/latest_scrutins.json")
     parser.add_argument("--include-already-published", action="store_true")
     parser.add_argument("--numero", type=int, help="Force un numero de scrutin precis.")
+    parser.add_argument("--since-date", help="Ignore les scrutins anterieurs a cette date YYYY-MM-DD.")
     args = parser.parse_args()
 
     selected = select_scrutins_from_zip(
@@ -256,6 +260,7 @@ def main() -> None:
         args.limit,
         include_already_published=args.include_already_published,
         numero=args.numero,
+        since_date=args.since_date,
     )
 
     output = Path(args.output)

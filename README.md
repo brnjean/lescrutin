@@ -51,11 +51,26 @@ PYTHONPATH=src python stage_public_asset.py \
   --public-base-url https://ton-utilisateur.github.io/ton-repo
 ```
 
-## Surveillance automatique
+## Publication automatique
 
-GitHub Actions lance le controle automatiquement tous les 3 jours a `06:30 UTC`, soit environ `08:30` en France l'ete. Ton ordinateur peut etre ferme: GitHub execute le robot sur ses propres serveurs.
+GitHub Actions lance le robot automatiquement tous les 3 jours a `06:30 UTC`, soit environ `08:30` en France l'ete. Ton ordinateur peut etre ferme: GitHub execute le robot sur ses propres serveurs.
 
-Tu peux aussi lancer le controle manuellement depuis GitHub: onglet `Actions`, workflow `Vote check every 3 days`, bouton `Run workflow`.
+Le robot:
+
+- cherche le dernier scrutin en lecture definitive non publie;
+- ignore les scrutins anterieurs au `28 juillet 2026`, pour ne pas publier l'ancien historique;
+- verifie les chiffres avec la source officielle;
+- genere l'image et la legende;
+- met l'image en ligne;
+- publie sur Instagram;
+- marque le scrutin comme publie dans `published.json`.
+
+Tu peux aussi lancer le controle manuellement depuis GitHub: onglet `Actions`, workflow `Auto publish final readings`, bouton `Run workflow`.
+
+Secrets GitHub necessaires:
+
+- `META_IG_USER_ID`
+- `META_ACCESS_TOKEN`
 
 ## Publication Instagram
 
@@ -92,6 +107,7 @@ PYTHONPATH=src python publish_instagram.py \
 
 - Couleurs fixes: pour, contre, abstention.
 - Ordre gauche-droite centralise dans `groupes_politiques.json`.
+- Titres courts: verbe clair + objet concret de la loi, sans jugement politique.
 - Filtre editorial: publication automatique uniquement pour les votes en lecture definitive sur l'ensemble du texte.
 - Les votes intermediaires, textes de CMP, motions, amendements et votes d'article sont ignores par defaut.
 - Etat anti-doublon: `published.json`.
