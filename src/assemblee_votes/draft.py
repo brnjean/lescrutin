@@ -11,12 +11,19 @@ from .verify import verify_scrutin
 from .visual import draw_card
 
 
+def editorial_title(scrutin: dict[str, Any]) -> str:
+    dossier = scrutin.get("dossier")
+    if dossier and dossier.lower() == "fin de vie":
+        return "Créer un droit à l'aide à mourir"
+    return dossier or scrutin.get("objet") or scrutin["titre"]
+
+
 def build_caption(scrutin: dict[str, Any]) -> str:
     result = (
         f"Le scrutin a ete adopte avec {scrutin['totals']['pour']} voix pour, "
         f"{scrutin['totals']['contre']} contre et {scrutin['totals']['abstention']} abstention(s)."
     )
-    title = scrutin.get("dossier") or scrutin.get("objet") or scrutin["titre"]
+    title = editorial_title(scrutin)
     return "\n\n".join(
         [
             result,
@@ -53,7 +60,7 @@ def create_draft(
             "uid": scrutin["uid"],
             "numero": scrutin["numero"],
             "date": scrutin["date"],
-            "title_for_image": scrutin.get("dossier") or scrutin["titre"],
+            "title_for_image": editorial_title(scrutin),
             "source_url": scrutin["source_url"],
             "totals": scrutin["totals"],
         },

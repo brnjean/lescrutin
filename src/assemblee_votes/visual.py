@@ -64,6 +64,8 @@ def _wrap(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.ImageFont, max_w
 
 def _short_title(scrutin: dict[str, Any]) -> str:
     dossier = scrutin.get("dossier")
+    if dossier and dossier.lower() == "fin de vie":
+        return "CRÉER UN DROIT À L'AIDE À MOURIR"
     if dossier:
         return dossier.upper()
     title = scrutin["titre"]
@@ -194,7 +196,11 @@ def draw_card(scrutin: dict[str, Any], output: str | Path, config_path: str | Pa
     chart_left = 112
     chart_right = SIZE - 54
     chart_height = chart_bottom - chart_top
-    max_members = max(max(group["membres"], group["pour"] + group["contre"] + group["abstention"] + group["non_votant"]) for group in scrutin["groups"])
+    max_vote_total = max(
+        group["pour"] + group["contre"] + group["abstention"]
+        for group in scrutin["groups"]
+    )
+    max_members = max(max_vote_total, max(group["membres"] for group in scrutin["groups"]))
     y_max = max(50, ((max_members + 49) // 50) * 50)
 
     for tick in range(0, y_max + 1, 50):
@@ -216,14 +222,13 @@ def draw_card(scrutin: dict[str, Any], output: str | Path, config_path: str | Pa
         x0 = chart_left + index * (bar_width + gap)
         x1 = x0 + bar_width
         bottom = chart_bottom
-        for key in ("non_votant", "abstention", "contre", "pour"):
+        for key in ("pour", "contre", "abstention"):
             value = group[key]
             if value <= 0:
                 continue
             h = int((value / y_max) * chart_height)
             y0 = bottom - h
-            color_key = key if key != "abstention" else "abstention"
-            draw.rectangle((x0, y0, x1, bottom), fill=colors[color_key], outline=layout["text"])
+            draw.rectangle((x0, y0, x1, bottom), fill=colors[key], outline=layout["text"])
             bottom = y0
         _draw_logo_badge(
             img,
