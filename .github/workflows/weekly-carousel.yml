@@ -1,0 +1,63 @@
+name: Auto publish weekly carousel
+
+on:
+  schedule:
+    - cron: "30 7 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: lescrutin-weekly-carousel
+  cancel-in-progress: false
+
+jobs:
+  publish-weekly:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      PUBLIC_BASE_URL: https://brnjean.github.io/lescrutin
+      WEEKLY_AUTO_SINCE_DATE: "2026-07-20"
+      META_GRAPH_HOST: graph.instagram.com
+      META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
+      META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+
+      - name: Prepare weekly carousel
+        id: prepare
+        run: PYTHONPATH=src python auto_weekly_carousel.py
+
+      - name: Upload weekly carousel artifact
+        if: steps.prepare.outputs.has_carousel == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-carousel
+          path: outputs/weekly/**/*.png
+
+      - name: Commit public carousel
+        if: steps.prepare.outputs.has_carousel == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public
+          git commit -m "Stage weekly carousel ${{ steps.prepare.outputs.week_id }}" || exit 0
+          git push
+
+      - name: Publish weekly carousel to Instagram
+        if: steps.prepare.outputs.has_carousel == 'true'
+        run: |
+          test -n "$META_IG_USER_ID"
+          test -n "$META_ACCESS_TOKEN"
+          PYTHONPATH=src python publish_instagram_carousel.py \
+            --draft "${{ steps.prepare.outputs.draft_path }}"
+
+      - name: Commit weekly published state
+        if: steps.prepare.outputs.has_carousel == 'true'
+        run: |
+          git add published.json
+          git commit -m "Mark weekly carousel ${{ steps.prepare.outputs.week_id }} published" || exit 0
+          git push

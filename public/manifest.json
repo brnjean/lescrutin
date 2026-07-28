@@ -16,5 +16,90 @@
       "public_url": "https://brnjean.github.io/lescrutin/posts/scrutin-8280.png",
       "staged_at": "2026-07-28T11:50:17.296014+00:00"
     }
+  ],
+  "weekly_carousels": [
+    {
+      "week_id": "week-2026-07-20",
+      "week_start": "2026-07-20",
+      "week_end": "2026-07-26",
+      "draft_path": "outputs/weekly/week-2026-07-20/draft-week-2026-07-20.json",
+      "slides": [
+        {
+          "kind": "cover",
+          "path": "outputs/weekly/week-2026-07-20/slide-01-cover.png",
+          "public_path": "carousels/week-2026-07-20/slide-01.png",
+          "public_url": "https://brnjean.github.io/lescrutin/carousels/week-2026-07-20/slide-01.png"
+        },
+        {
+          "kind": "vote",
+          "numero": 8434,
+          "uid": "VTANR5L17V8434",
+          "path": "outputs/weekly/week-2026-07-20/slide-02-scrutin-8434.png",
+          "public_path": "carousels/week-2026-07-20/slide-02.png",
+          "public_url": "https://brnjean.github.io/lescrutin/carousels/week-2026-07-20/slide-02.png"
+        },
+        {
+          "kind": "vote",
+          "numero": 8433,
+          "uid": "VTANR5L17V8433",
+          "path": "outputs/weekly/week-2026-07-20/slide-03-scrutin-8433.png",
+          "public_path": "carousels/week-2026-07-20/slide-03.png",
+          "public_url": "https://brnjean.github.io/lescrutin/carousels/week-2026-07-20/slide-03.png"
+        },
+        {
+          "kind": "vote",
+          "numero": 8431,
+          "uid": "VTANR5L17V8431",
+          "path": "outputs/weekly/week-2026-07-20/slide-04-scrutin-8431.png",
+          "public_path": "carousels/week-2026-07-20/slide-04.png",
+          "public_url": "https://brnjean.github.io/lescrutin/carousels/week-2026-07-20/slide-04.png"
+        },
+        {
+          "kind": "vote",
+          "numero": 8427,
+          "uid": "VTANR5L17V8427",
+          "path": "outputs/weekly/week-2026-07-20/slide-05-scrutin-8427.png",
+          "public_path": "carousels/week-2026-07-20/slide-05.png",
+          "public_url": "https://brnjean.github.io/lescrutin/carousels/week-2026-07-20/slide-05.png"
+        },
+        {
+          "kind": "vote",
+          "numero": 8421,
+          "uid": "VTANR5L17V8421",
+          "path": "outputs/weekly/week-2026-07-20/slide-06-scrutin-8421.png",
+          "public_path": "carousels/week-2026-07-20/slide-06.png",
+          "public_url": "https://brnjean.github.io/lescrutin/carousels/week-2026-07-20/slide-06.png"
+        },
+        {
+          "kind": "vote",
+          "numero": 8419,
+          "uid": "VTANR5L17V8419",
+          "path": "outputs/weekly/week-2026-07-20/slide-07-scrutin-8419.png",
+          "public_path": "carousels/week-2026-07-20/slide-07.png",
+          "public_url": "https://brnjean.github.io/lescrutin/carousels/week-2026-07-20/slide-07.png"
+        },
+        {
+          "kind": "vote",
+          "numero": 8418,
+          "uid": "VTANR5L17V8418",
+          "path": "outputs/weekly/week-2026-07-20/slide-08-scrutin-8418.png",
+          "public_path": "carousels/week-2026-07-20/slide-08.png",
+          "public_url": "https://brnjean.github.io/lescrutin/carousels/week-2026-07-20/slide-08.png"
+        },
+        {
+          "kind": "definitions",
+          "path": "outputs/weekly/week-2026-07-20/slide-09-definitions.png",
+          "public_path": "carousels/week-2026-07-20/slide-09.png",
+          "public_url": "https://brnjean.github.io/lescrutin/carousels/week-2026-07-20/slide-09.png"
+        },
+        {
+          "kind": "cta",
+          "path": "outputs/weekly/week-2026-07-20/slide-10-subscribe.png",
+          "public_path": "carousels/week-2026-07-20/slide-10.png",
+          "public_url": "https://brnjean.github.io/lescrutin/carousels/week-2026-07-20/slide-10.png"
+        }
+      ],
+      "staged_at": "2026-07-28T16:18:01.899092+00:00"
+    }
   ]
 }

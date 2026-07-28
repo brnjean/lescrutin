@@ -73,6 +73,35 @@ Secrets GitHub necessaires:
 - `META_IG_USER_ID`
 - `META_ACCESS_TOKEN`
 
+## Carrousel hebdomadaire
+
+Le carrousel hebdomadaire resume les votes cles d'une semaine:
+
+- couverture editoriale;
+- une slide par texte;
+- une slide de definition des etapes;
+- une slide d'abonnement et de soutien.
+
+Il garde les memes trois niveaux que les posts individuels: lecture definitive, texte de CMP, nouvelle lecture.
+
+Generation locale:
+
+```bash
+PYTHONPATH=src python prepare_weekly_carousel.py
+PYTHONPATH=src python stage_weekly_carousel.py \
+  --draft outputs/weekly/week-YYYY-MM-DD/draft-week-YYYY-MM-DD.json \
+  --public-base-url https://brnjean.github.io/lescrutin
+```
+
+Publication locale:
+
+```bash
+PYTHONPATH=src python publish_instagram_carousel.py \
+  --draft outputs/weekly/week-YYYY-MM-DD/draft-week-YYYY-MM-DD.json
+```
+
+GitHub Actions peut aussi publier le carrousel automatiquement chaque lundi via le workflow `Auto publish weekly carousel`.
+
 ## Publication Instagram
 
 Voir [docs/instagram_setup.md](docs/instagram_setup.md).
