@@ -34,17 +34,20 @@ def _load_draft(path: str | Path) -> dict[str, Any]:
 
 
 def _verify_public_slides(draft: dict[str, Any], attempts: int = 24, delay_seconds: int = 5) -> None:
-    for slide in draft["slides"]:
+    print("Verification des images publiques du carrousel...", flush=True)
+    for index, slide in enumerate(draft["slides"], start=1):
         local_path = slide["path"]
         public_url = slide.get("public_url")
         if not public_url:
             raise SystemExit(f"URL publique manquante pour {local_path}.")
+        print(f"- slide {index}: {public_url}", flush=True)
         local_hash = _sha256_file(local_path)
         last_error = ""
         for attempt in range(1, attempts + 1):
             try:
                 public_hash = _sha256_bytes(_download_bytes(public_url))
                 if public_hash == local_hash:
+                    print(f"  OK slide {index}", flush=True)
                     break
                 last_error = "hash public different du fichier local"
             except RuntimeError as exc:
@@ -113,6 +116,7 @@ def main() -> None:
 
     draft = _load_draft(args.draft)
     slides = draft["slides"]
+    print(f"Carrousel charge: {draft['week_id']} ({len(slides)} slides)", flush=True)
     if not 2 <= len(slides) <= 10:
         raise SystemExit(f"Instagram accepte 2 a 10 slides par carrousel, recu: {len(slides)}.")
 
@@ -130,13 +134,20 @@ def main() -> None:
         raise SystemExit("Variables manquantes: META_IG_USER_ID et META_ACCESS_TOKEN.")
 
     children = []
-    for slide in slides:
+    print("Creation des slides chez Instagram...", flush=True)
+    for index, slide in enumerate(slides, start=1):
+        print(f"- creation container slide {index}/{len(slides)}", flush=True)
         child_id = create_carousel_item(ig_user_id, access_token, slide["public_url"])
+        print(f"  attente traitement Meta slide {index}: {child_id}", flush=True)
         wait_until_container_ready(child_id, access_token)
+        print(f"  OK slide {index}", flush=True)
         children.append(child_id)
 
+    print("Creation du container carrousel...", flush=True)
     carousel_id = create_carousel_container(ig_user_id, access_token, children, draft["caption"])
+    print(f"Attente traitement Meta carrousel: {carousel_id}", flush=True)
     wait_until_container_ready(carousel_id, access_token)
+    print("Publication du carrousel...", flush=True)
     media_id = publish_container(ig_user_id, access_token, carousel_id)
     _mark_weekly_published(args.published, draft["week_id"], media_id)
     print(f"Publication carrousel Instagram OK: media_id={media_id}")
