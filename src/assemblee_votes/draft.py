@@ -20,7 +20,7 @@ def editorial_title(scrutin: dict[str, Any]) -> str:
 
 def build_caption(scrutin: dict[str, Any]) -> str:
     result = (
-        f"Le scrutin a ete adopte avec {scrutin['totals']['pour']} voix pour, "
+        f"Le scrutin a été adopté avec {scrutin['totals']['pour']} voix pour, "
         f"{scrutin['totals']['contre']} contre et {scrutin['totals']['abstention']} abstention(s)."
     )
     title = editorial_title(scrutin)
@@ -29,7 +29,7 @@ def build_caption(scrutin: dict[str, Any]) -> str:
             result,
             f"Scrutin n°{scrutin['numero']} - {scrutin['date']}",
             title,
-            f"Source : Assemblee nationale - {scrutin['source_url']}",
+            f"Source : Assemblée nationale - {scrutin['source_url']}",
             "@lescrutin",
             "#AssembleeNationale #Politique #Datajournalisme #Vote #France",
         ]

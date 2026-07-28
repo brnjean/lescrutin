@@ -19,6 +19,18 @@ GRAPH_HOST = os.getenv("META_GRAPH_HOST", "graph.instagram.com")
 GRAPH_BASE_URL = f"https://{GRAPH_HOST}/{GRAPH_VERSION}"
 
 
+def _clean_secret(value: str | None) -> str | None:
+    if value is None:
+        return None
+    cleaned = value.strip()
+    if any(char in cleaned for char in "\r\n"):
+        raise SystemExit(
+            "Token Meta invalide: il contient un retour a la ligne au milieu. "
+            "Copie le token en une seule ligne."
+        )
+    return cleaned
+
+
 def _post_json(url: str, data: dict[str, str], access_token: str) -> dict[str, Any]:
     body = urllib.parse.urlencode(data).encode("utf-8")
     req = urllib.request.Request(
@@ -166,8 +178,8 @@ def main() -> None:
     parser.add_argument("--dry-run", action="store_true", help="Verifie tout sans appeler l'API Meta.")
     args = parser.parse_args()
 
-    ig_user_id = os.getenv("META_IG_USER_ID")
-    access_token = os.getenv("META_ACCESS_TOKEN")
+    ig_user_id = _clean_secret(os.getenv("META_IG_USER_ID"))
+    access_token = _clean_secret(os.getenv("META_ACCESS_TOKEN"))
     if not args.dry_run and (not ig_user_id or not access_token):
         raise SystemExit("Variables manquantes: META_IG_USER_ID et META_ACCESS_TOKEN.")
 
