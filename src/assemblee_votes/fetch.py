@@ -51,6 +51,7 @@ class ScrutinSummary:
     titre: str
     objet: str
     dossier: str | None
+    dossier_ref: str | None
     type_vote: str
     type_vote_code: str
     sort: str
@@ -148,6 +149,7 @@ def normalize_scrutin(scrutin_doc: dict[str, Any], config_path: str | Path) -> S
         titre=scrutin["titre"],
         objet=scrutin.get("objet", {}).get("libelle") or scrutin["titre"],
         dossier=dossier.get("libelle"),
+        dossier_ref=dossier.get("dossierRef"),
         type_vote=scrutin["typeVote"].get("libelleTypeVote") or "",
         type_vote_code=scrutin["typeVote"].get("codeTypeVote") or "",
         sort=scrutin["sort"].get("libelle") or "",

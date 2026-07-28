@@ -278,7 +278,7 @@ def draw_vote_slide(
     title = editorial_title(scrutin)
     badge_font = _font(24, bold=True)
     title_font = _font(58, bold=True)
-    body_font = _font(30)
+    body_font = _font(28)
     small_font = _font(23)
     stat_font = _font(30, bold=True)
 
@@ -316,7 +316,7 @@ def draw_vote_slide(
     y += 62
 
     text = description.strip() or "Texte à compléter avant publication."
-    _draw_wrapped(draw, (MARGIN, y), text, body_font, TEXT, SIZE - 2 * MARGIN, 38, 4)
+    _draw_wrapped(draw, (MARGIN, y), text, body_font, TEXT, SIZE - 2 * MARGIN, 35, 6)
 
     source = f"Source : Assemblée nationale, scrutin public n°{scrutin['numero']}"
     draw.text((MARGIN, SIZE - 104), source, fill="#5E5144", font=small_font)
@@ -405,7 +405,7 @@ def build_weekly_caption(start: date, end: date, scrutins: list[dict[str, Any]])
             "",
             "Un vote clé ne signifie pas toujours que la loi est définitivement adoptée : l'étape est indiquée sur chaque slide.",
             "",
-            "Sources : Assemblée nationale (votes) ; programmescandidats.fr (synthèses)",
+            "Sources : Assemblée nationale et sources publiques indiquées dans le projet",
             "@lescrutin",
             "#AssembleeNationale #Politique #France #Datajournalisme #Parlement",
         ]
@@ -475,6 +475,14 @@ def create_weekly_carousel(
                 "date": scrutin["date"],
                 "title": editorial_title(scrutin),
                 "description": descriptions.get(int(scrutin["numero"]), ""),
+                "description_sources": next(
+                    (
+                        item.get("description_sources", [])
+                        for item in copy.get("items", [])
+                        if int(item.get("numero", 0)) == int(scrutin["numero"])
+                    ),
+                    [],
+                ),
                 "stage_id": scrutin.get("stage_id"),
                 "stage_label": stage_label(scrutin.get("stage_id")),
                 "source_url": scrutin["source_url"],

@@ -5,14 +5,14 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
-from .programmescandidats import fetch_scrutin_explanation
+from .researched_descriptions import researched_description
 from .stages import stage_label
 from .titles import editorial_title
 
 
 COPY_INSTRUCTIONS = (
-    "Descriptions recuperees automatiquement depuis programmescandidats.fr. "
-    "Ne pas modifier ce fichier pour le flux automatique."
+    "Descriptions generees depuis des sources publiques et verifiees par garde-fou. "
+    "Le flux automatique bloque si aucune synthese fiable n'est disponible."
 )
 
 
@@ -44,7 +44,7 @@ def load_or_create_weekly_copy(
     missing: list[int] = []
     for scrutin in scrutins:
         numero = int(scrutin["numero"])
-        explanation = fetch_scrutin_explanation(numero)
+        explanation = researched_description(scrutin)
         description = explanation.description if explanation else ""
         if not description:
             missing.append(numero)
@@ -55,7 +55,8 @@ def load_or_create_weekly_copy(
                 "title": editorial_title(scrutin),
                 "stage_label": stage_label(scrutin.get("stage_id")),
                 "source_url": scrutin["source_url"],
-                "description_source": explanation.url if explanation else "",
+                "description_sources": explanation.sources if explanation else [],
+                "description_method": explanation.method if explanation else "",
                 "description": description,
             }
         )

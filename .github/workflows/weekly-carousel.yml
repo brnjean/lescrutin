@@ -20,6 +20,7 @@ jobs:
       META_GRAPH_HOST: graph.instagram.com
       META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
       META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
