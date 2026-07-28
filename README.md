@@ -112,7 +112,7 @@ PYTHONPATH=src python publish_instagram_carousel.py \
   --draft outputs/weekly/week-YYYY-MM-DD/draft-week-YYYY-MM-DD.json
 ```
 
-Le robot bloque la mise en ligne si une description est vide. Le workflow GitHub `Prepare/publish weekly carousel` se lance chaque lundi et peut aussi etre lance manuellement depuis l'onglet `Actions`.
+Le robot bloque la mise en ligne si une description est vide. Le workflow GitHub `Prepare/publish weekly carousel` se lance chaque dimanche a 18h, heure de Paris, et peut aussi etre lance manuellement depuis l'onglet `Actions`.
 
 ## Publication Instagram
 

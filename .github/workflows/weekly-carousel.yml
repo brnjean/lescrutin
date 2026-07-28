@@ -5,7 +5,8 @@ on:
     branches:
       - main
   schedule:
-    - cron: "30 7 * * 1"
+    - cron: "0 16 * * 0"
+    - cron: "0 17 * * 0"
   workflow_dispatch:
 
 concurrency:
@@ -13,8 +14,29 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  schedule-gate:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.gate.outputs.should_run }}
+    steps:
+      - id: gate
+        run: |
+          if [ "${{ github.event_name }}" != "schedule" ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          paris_slot="$(TZ=Europe/Paris date +%u-%H)"
+          if [ "$paris_slot" = "7-18" ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
+            echo "Skip: current Europe/Paris slot is $paris_slot, expected 7-18."
+          fi
+
   publish-weekly:
-    if: github.event_name != 'push' || contains(github.event.head_commit.message, '[publish-weekly-now]')
+    needs: schedule-gate
+    if: needs.schedule-gate.outputs.should_run == 'true' && (github.event_name != 'push' || contains(github.event.head_commit.message, '[publish-weekly-now]'))
     runs-on: ubuntu-latest
     permissions:
       contents: write
