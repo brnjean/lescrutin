@@ -54,6 +54,12 @@ Le script accepte les deux modeles via `PUBLIC_BASE_URL`.
 
 ## Commandes locales
 
+URL de redirection a entrer dans Meta Developers:
+
+```text
+https://brnjean.github.io/lescrutin/instagram-callback.html
+```
+
 Tester le token:
 
 ```bash

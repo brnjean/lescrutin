@@ -62,6 +62,12 @@ export META_ACCESS_TOKEN="COLLER_LE_TOKEN_ICI"
 PYTHONPATH=src python inspect_instagram_token.py
 ```
 
+URL de redirection Instagram:
+
+```text
+https://brnjean.github.io/lescrutin/instagram-callback.html
+```
+
 Resume: Instagram ne peut pas publier directement `outputs/scrutin-XXXX.png` depuis ton ordinateur. Il faut d'abord une URL publique HTTPS pour l'image, puis:
 
 ```bash

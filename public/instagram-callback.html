@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>lescrutin - Connexion Instagram</title>
+    <style>
+      body {
+        background: #f2ebdf;
+        color: #111;
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        padding: 48px;
+      }
+      main {
+        max-width: 760px;
+      }
+      h1 {
+        font-size: 40px;
+        margin: 0 0 16px;
+      }
+      code,
+      pre {
+        background: #fffaf1;
+        border: 1px solid #d9d0c1;
+        border-radius: 6px;
+        display: block;
+        overflow-wrap: anywhere;
+        padding: 16px;
+        white-space: pre-wrap;
+      }
+      .ok {
+        color: #6e1423;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Connexion Instagram</h1>
+      <p id="status">Lecture du retour Meta...</p>
+      <pre id="output"></pre>
+      <p>
+        Copie uniquement la valeur <strong>code</strong> si elle est affichee.
+        Ne partage jamais ton token d'acces.
+      </p>
+    </main>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const error = params.get("error") || params.get("error_message");
+      const code = params.get("code");
+      const status = document.getElementById("status");
+      const output = document.getElementById("output");
+
+      if (error) {
+        status.textContent = "Meta a renvoye une erreur.";
+        output.textContent = error;
+      } else if (code) {
+        status.innerHTML = '<span class="ok">Code recu.</span>';
+        output.textContent = code;
+      } else {
+        status.textContent = "Aucun code recu.";
+        output.textContent = window.location.href;
+      }
+    </script>
+  </body>
+</html>
