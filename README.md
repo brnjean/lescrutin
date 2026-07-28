@@ -114,6 +114,33 @@ PYTHONPATH=src python publish_instagram_carousel.py \
 
 Le robot bloque la mise en ligne si une description est vide. Le workflow GitHub `Prepare/publish weekly carousel` se lance chaque dimanche a 18h, heure de Paris, et peut aussi etre lance manuellement depuis l'onglet `Actions`.
 
+## Mensuelle Europe
+
+Le carrousel mensuel Europe reprend la meme logique: votes principaux du Parlement europeen, explications courtes, resultats globaux et positions majoritaires des groupes.
+
+Sources utilisees:
+
+- Parlement europeen Open Data API;
+- resultats d'appel nominal du Parlement europeen;
+- Observatoire legislatif europeen, communiques et documents lies quand ils sont disponibles;
+- HowTheyVote pour agreger les votes nominaux par groupes politiques, avec attribution.
+
+Generation locale:
+
+```bash
+PYTHONPATH=src python prepare_europe_monthly_carousel.py
+```
+
+Forcer un mois precis:
+
+```bash
+PYTHONPATH=src python prepare_europe_monthly_carousel.py \
+  --start-date 2026-07-01 \
+  --end-date 2026-07-31
+```
+
+Le workflow GitHub `Publish Europe monthly carousel` se lance chaque 28 du mois a 18h, heure de Paris. Il peut aussi etre lance manuellement depuis l'onglet `Actions`.
+
 ## Publication Instagram
 
 Voir [docs/instagram_setup.md](docs/instagram_setup.md).

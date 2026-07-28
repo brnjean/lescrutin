@@ -1,0 +1,109 @@
+name: Publish Europe monthly carousel
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "0 16 28 * *"
+    - cron: "0 17 28 * *"
+  workflow_dispatch:
+
+concurrency:
+  group: lescrutin-europe-monthly
+  cancel-in-progress: false
+
+jobs:
+  schedule-gate:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.gate.outputs.should_run }}
+    steps:
+      - id: gate
+        run: |
+          if [ "${{ github.event_name }}" != "schedule" ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          paris_slot="$(TZ=Europe/Paris date +%d-%H)"
+          if [ "$paris_slot" = "28-18" ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
+            echo "Skip: current Europe/Paris slot is $paris_slot, expected 28-18."
+          fi
+
+  publish-europe-monthly:
+    needs: schedule-gate
+    if: needs.schedule-gate.outputs.should_run == 'true' && (github.event_name != 'push' || contains(github.event.head_commit.message, '[publish-europe-now]'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      PUBLIC_BASE_URL: https://brnjean.github.io/lescrutin
+      META_GRAPH_HOST: graph.instagram.com
+      META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
+      META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+
+      - name: Prepare Europe monthly carousel
+        id: prepare
+        run: PYTHONPATH=src python auto_europe_monthly_carousel.py
+
+      - name: Upload Europe monthly carousel artifact
+        if: steps.prepare.outputs.has_carousel == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: europe-monthly-carousel
+          path: outputs/europe-monthly/**/*.png
+
+      - name: Commit public Europe carousel
+        if: steps.prepare.outputs.has_carousel == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public europe_copy
+          git commit -m "Stage Europe monthly carousel ${{ steps.prepare.outputs.carousel_id }}" || exit 0
+          git push
+
+      - name: Configure Pages
+        if: steps.prepare.outputs.has_carousel == 'true'
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        if: steps.prepare.outputs.has_carousel == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Deploy Pages
+        if: steps.prepare.outputs.has_carousel == 'true'
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Publish Europe monthly carousel to Instagram
+        if: steps.prepare.outputs.has_carousel == 'true'
+        run: |
+          test -n "$META_IG_USER_ID"
+          test -n "$META_ACCESS_TOKEN"
+          PYTHONPATH=src python publish_instagram_carousel.py \
+            --draft "${{ steps.prepare.outputs.draft_path }}"
+
+      - name: Commit Europe published state
+        if: steps.prepare.outputs.has_carousel == 'true'
+        run: |
+          git add published.json
+          git commit -m "Mark Europe monthly carousel ${{ steps.prepare.outputs.carousel_id }} published" || exit 0
+          git push

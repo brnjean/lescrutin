@@ -29,7 +29,7 @@ def _sha256_file(path: str | Path) -> str:
 def _load_draft(path: str | Path) -> dict[str, Any]:
     draft = json.loads(Path(path).read_text(encoding="utf-8"))
     missing = [
-        int(scrutin["numero"])
+        int(scrutin.get("numero") or scrutin.get("id") or 0)
         for scrutin in draft.get("scrutins", [])
         if not str(scrutin.get("description") or "").strip()
     ]
@@ -110,13 +110,13 @@ def create_carousel_container(
     return str(container_id)
 
 
-def _mark_weekly_published(path: str | Path, week_id: str, media_id: str) -> None:
+def _mark_carousel_published(path: str | Path, bucket: str, carousel_id: str, media_id: str) -> None:
     path = Path(path)
     data = {"published": []}
     if path.exists():
         data = json.loads(path.read_text(encoding="utf-8"))
-    weekly = data.setdefault("weekly_carousels", {})
-    weekly[week_id] = media_id
+    carousels = data.setdefault(bucket, {})
+    carousels[carousel_id] = media_id
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
@@ -129,7 +129,8 @@ def main() -> None:
 
     draft = _load_draft(args.draft)
     slides = draft["slides"]
-    print(f"Carrousel charge: {draft['week_id']} ({len(slides)} slides)", flush=True)
+    carousel_id = draft.get("week_id") or draft.get("carousel_id")
+    print(f"Carrousel charge: {carousel_id} ({len(slides)} slides)", flush=True)
     if not 2 <= len(slides) <= 10:
         raise SystemExit(f"Instagram accepte 2 a 10 slides par carrousel, recu: {len(slides)}.")
 
@@ -162,7 +163,12 @@ def main() -> None:
     wait_until_container_ready(carousel_id, access_token)
     print("Publication du carrousel...", flush=True)
     media_id = publish_container(ig_user_id, access_token, carousel_id)
-    _mark_weekly_published(args.published, draft["week_id"], media_id)
+    _mark_carousel_published(
+        args.published,
+        draft.get("published_bucket", "weekly_carousels"),
+        str(draft.get("week_id") or draft.get("carousel_id")),
+        media_id,
+    )
     print(f"Publication carrousel Instagram OK: media_id={media_id}")
 
 

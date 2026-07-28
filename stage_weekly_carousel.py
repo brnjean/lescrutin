@@ -19,7 +19,7 @@ def _missing_copy(draft: dict) -> list[int]:
     for scrutin in draft.get("scrutins", []):
         description = str(scrutin.get("description") or "").strip()
         if not description:
-            missing.append(int(scrutin["numero"]))
+            missing.append(int(scrutin.get("numero") or scrutin.get("id") or 0))
     return sorted(set(missing))
 
 
@@ -47,7 +47,7 @@ def main() -> None:
         raise SystemExit("Mise en ligne bloquee: le brouillon hebdomadaire n'est pas approuve.")
 
     public_dir = Path(args.public_dir)
-    week_id = draft["week_id"]
+    week_id = draft.get("week_id") or draft.get("carousel_id")
     carousel_dir = public_dir / "carousels" / week_id
     carousel_dir.mkdir(parents=True, exist_ok=True)
 
@@ -66,17 +66,19 @@ def main() -> None:
         )
 
     manifest_path = public_dir / "manifest.json"
-    manifest = {"posts": [], "weekly_carousels": []}
+    manifest_key = draft.get("manifest_key", "weekly_carousels")
+    manifest = {"posts": [], "weekly_carousels": [], manifest_key: []}
     if manifest_path.exists():
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     carousels = [
         item
-        for item in manifest.get("weekly_carousels", [])
-        if item.get("week_id") != week_id
+        for item in manifest.get(manifest_key, [])
+        if item.get("week_id") != week_id and item.get("carousel_id") != week_id
     ]
     carousels.insert(
         0,
         {
+            "carousel_id": week_id,
             "week_id": week_id,
             "week_start": draft["week_start"],
             "week_end": draft["week_end"],
@@ -85,7 +87,7 @@ def main() -> None:
             "staged_at": datetime.now(timezone.utc).isoformat(),
         },
     )
-    manifest["weekly_carousels"] = carousels
+    manifest[manifest_key] = carousels
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
 
     staged_draft = {**draft, "slides": public_slides}
