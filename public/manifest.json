@@ -108,5 +108,98 @@
       ],
       "staged_at": "2026-07-28T17:17:00.513341+00:00"
     }
+  ],
+  "europe_monthly_carousels": [
+    {
+      "carousel_id": "europe-2026-07",
+      "week_id": "europe-2026-07",
+      "week_start": "2026-07-01",
+      "week_end": "2026-07-31",
+      "draft_path": "outputs/europe-monthly/europe-2026-07/draft-europe-2026-07.json",
+      "slides": [
+        {
+          "kind": "cover",
+          "path": "outputs/europe-monthly/europe-2026-07/slide-01-cover.png",
+          "public_path": "carousels/europe-2026-07/slide-01.png",
+          "public_url": "https://brnjean.github.io/lescrutin/carousels/europe-2026-07/slide-01.png"
+        },
+        {
+          "kind": "vote",
+          "id": "195719",
+          "numero": 195719,
+          "path": "outputs/europe-monthly/europe-2026-07/slide-02-europe-195719.png",
+          "description": "Le Parlement a autorisé l'ouverture des négociations avec le Conseil sur le projet d'euro numérique. Le texte encadre une monnaie électronique émise par la BCE, avec paiements en ligne ou hors ligne, garanties de confidentialité, services de base gratuits et maintien de l'accès au cash. Ce vote ne vaut pas adoption définitive : il fixe la position du Parlement pour négocier.",
+          "public_path": "carousels/europe-2026-07/slide-02.png",
+          "public_url": "https://brnjean.github.io/lescrutin/carousels/europe-2026-07/slide-02.png"
+        },
+        {
+          "kind": "vote",
+          "id": "195341",
+          "numero": 195341,
+          "path": "outputs/europe-monthly/europe-2026-07/slide-03-europe-195341.png",
+          "description": "Les députés ont adopté une résolution s'opposant à l'autorisation de mise sur le marché de produits issus du maïs génétiquement modifié DP202216 x NK603 x DAS-40278-9. La décision visée venait de la Commission et concernait des aliments ou produits contenant, consistant en ou produits à partir de ce maïs. Une résolution d'objection exprime la position du Parlement face à une décision d'exécution.",
+          "public_path": "carousels/europe-2026-07/slide-03.png",
+          "public_url": "https://brnjean.github.io/lescrutin/carousels/europe-2026-07/slide-03.png"
+        },
+        {
+          "kind": "vote",
+          "id": "195340",
+          "numero": 195340,
+          "path": "outputs/europe-monthly/europe-2026-07/slide-04-europe-195340.png",
+          "description": "Le Parlement s'est opposé à une autorisation concernant des produits issus du soja génétiquement modifié MON 87705 x MON 87708 x MON 89788. Le vote porte sur une résolution d'objection à un projet de décision d'exécution de la Commission, dans le cadre des règles européennes sur les denrées et aliments génétiquement modifiés. Il s'agit d'une prise de position institutionnelle, pas d'une loi adoptée.",
+          "public_path": "carousels/europe-2026-07/slide-04.png",
+          "public_url": "https://brnjean.github.io/lescrutin/carousels/europe-2026-07/slide-04.png"
+        },
+        {
+          "kind": "vote",
+          "id": "195543",
+          "numero": 195543,
+          "path": "outputs/europe-monthly/europe-2026-07/slide-05-europe-195543.png",
+          "description": "Les députés ont adopté une résolution contre le renouvellement de l'autorisation de produits contenant, consistant en ou produits à partir du maïs génétiquement modifié NK603 x T25. Le texte vise une décision d'exécution de la Commission fondée sur le règlement européen relatif aux OGM dans l'alimentation humaine et animale. Le vote indique l'opposition du Parlement à cette autorisation.",
+          "public_path": "carousels/europe-2026-07/slide-05.png",
+          "public_url": "https://brnjean.github.io/lescrutin/carousels/europe-2026-07/slide-05.png"
+        },
+        {
+          "kind": "vote",
+          "id": "195638",
+          "numero": 195638,
+          "path": "outputs/europe-monthly/europe-2026-07/slide-06-europe-195638.png",
+          "description": "Le Parlement a adopté une résolution sur les conséquences de l'invasion turque de 1974 pour les femmes et les filles chypriotes. Le texte condamne l'occupation militaire, évoque les violences, déplacements forcés et séparations familiales, et demande des réparations pour les victimes. Une résolution fixe une position politique du Parlement européen, sans être directement une loi applicable.",
+          "public_path": "carousels/europe-2026-07/slide-06.png",
+          "public_url": "https://brnjean.github.io/lescrutin/carousels/europe-2026-07/slide-06.png"
+        },
+        {
+          "kind": "vote",
+          "id": "194935",
+          "numero": 194935,
+          "path": "outputs/europe-monthly/europe-2026-07/slide-07-europe-194935.png",
+          "description": "Les députés ont adopté une résolution sur le rapport 2025 de la Commission concernant la Serbie. Le texte rappelle que l'avancement vers l'Union européenne dépend du respect de la démocratie, de l'État de droit, des droits fondamentaux et de la mise en oeuvre effective des réformes. C'est une position politique sur le processus d'adhésion, pas une adoption législative.",
+          "public_path": "carousels/europe-2026-07/slide-07.png",
+          "public_url": "https://brnjean.github.io/lescrutin/carousels/europe-2026-07/slide-07.png"
+        },
+        {
+          "kind": "vote",
+          "id": "194917",
+          "numero": 194917,
+          "path": "outputs/europe-monthly/europe-2026-07/slide-08-europe-194917.png",
+          "description": "Le Parlement a adopté une résolution sur le rapport 2025 de la Commission concernant la Moldavie. Le texte souligne les progrès liés aux réformes européennes, notamment en matière de justice et de lutte contre la corruption, tout en signalant que les ingérences russes restent un risque majeur. Cette résolution accompagne le suivi politique du processus d'adhésion.",
+          "public_path": "carousels/europe-2026-07/slide-08.png",
+          "public_url": "https://brnjean.github.io/lescrutin/carousels/europe-2026-07/slide-08.png"
+        },
+        {
+          "kind": "definitions",
+          "path": "outputs/europe-monthly/europe-2026-07/slide-09-definitions.png",
+          "public_path": "carousels/europe-2026-07/slide-09.png",
+          "public_url": "https://brnjean.github.io/lescrutin/carousels/europe-2026-07/slide-09.png"
+        },
+        {
+          "kind": "cta",
+          "path": "outputs/europe-monthly/europe-2026-07/slide-10-subscribe.png",
+          "public_path": "carousels/europe-2026-07/slide-10.png",
+          "public_url": "https://brnjean.github.io/lescrutin/carousels/europe-2026-07/slide-10.png"
+        }
+      ],
+      "staged_at": "2026-07-28T22:37:36.175241+00:00"
+    }
   ]
 }
