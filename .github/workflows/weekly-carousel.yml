@@ -18,6 +18,11 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     env:
       PUBLIC_BASE_URL: https://brnjean.github.io/lescrutin
       WEEKLY_AUTO_SINCE_DATE: "2026-07-20"
@@ -51,6 +56,21 @@ jobs:
           git add public
           git commit -m "Stage weekly carousel ${{ steps.prepare.outputs.week_id }}" || exit 0
           git push
+
+      - name: Configure Pages
+        if: steps.prepare.outputs.has_carousel == 'true'
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        if: steps.prepare.outputs.has_carousel == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Deploy Pages
+        if: steps.prepare.outputs.has_carousel == 'true'
+        id: deployment
+        uses: actions/deploy-pages@v4
 
       - name: Publish weekly carousel to Instagram
         if: steps.prepare.outputs.has_carousel == 'true'
