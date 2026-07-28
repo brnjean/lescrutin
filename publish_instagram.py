@@ -14,12 +14,18 @@ from assemblee_votes.verify import verify_scrutin
 
 
 GRAPH_VERSION = os.getenv("META_GRAPH_API_VERSION", "v22.0")
-GRAPH_BASE_URL = f"https://graph.facebook.com/{GRAPH_VERSION}"
+GRAPH_HOST = os.getenv("META_GRAPH_HOST", "graph.instagram.com")
+GRAPH_BASE_URL = f"https://{GRAPH_HOST}/{GRAPH_VERSION}"
 
 
-def _post_json(url: str, data: dict[str, str]) -> dict[str, Any]:
+def _post_json(url: str, data: dict[str, str], access_token: str) -> dict[str, Any]:
     body = urllib.parse.urlencode(data).encode("utf-8")
-    req = urllib.request.Request(url, data=body, method="POST")
+    req = urllib.request.Request(
+        url,
+        data=body,
+        method="POST",
+        headers={"Authorization": f"Bearer {access_token}"},
+    )
     try:
         with urllib.request.urlopen(req, timeout=60) as response:
             return json.loads(response.read().decode("utf-8"))
@@ -28,9 +34,13 @@ def _post_json(url: str, data: dict[str, str]) -> dict[str, Any]:
         raise RuntimeError(f"Erreur Meta API {exc.code}: {details}") from exc
 
 
-def _get_json(url: str, params: dict[str, str]) -> dict[str, Any]:
+def _get_json(url: str, params: dict[str, str], access_token: str) -> dict[str, Any]:
     full_url = f"{url}?{urllib.parse.urlencode(params)}"
-    req = urllib.request.Request(full_url, method="GET")
+    req = urllib.request.Request(
+        full_url,
+        method="GET",
+        headers={"Authorization": f"Bearer {access_token}"},
+    )
     try:
         with urllib.request.urlopen(req, timeout=60) as response:
             return json.loads(response.read().decode("utf-8"))
@@ -77,8 +87,8 @@ def create_media_container(
         {
             "image_url": image_url,
             "caption": caption,
-            "access_token": access_token,
         },
+        access_token,
     )
     container_id = response.get("id")
     if not container_id:
@@ -94,7 +104,8 @@ def wait_until_container_ready(
     while time.time() < deadline:
         response = _get_json(
             f"{GRAPH_BASE_URL}/{container_id}",
-            {"fields": "status_code", "access_token": access_token},
+            {"fields": "status_code"},
+            access_token,
         )
         last_status = response.get("status_code", "UNKNOWN")
         if last_status == "FINISHED":
@@ -108,7 +119,8 @@ def wait_until_container_ready(
 def publish_container(ig_user_id: str, access_token: str, container_id: str) -> str:
     response = _post_json(
         f"{GRAPH_BASE_URL}/{ig_user_id}/media_publish",
-        {"creation_id": container_id, "access_token": access_token},
+        {"creation_id": container_id},
+        access_token,
     )
     media_id = response.get("id")
     if not media_id:
@@ -141,6 +153,7 @@ def main() -> None:
 
     if args.dry_run:
         print("Dry-run OK: brouillon approuve, source verifiee, publication non envoyee.")
+        print(f"Endpoint Meta: {GRAPH_BASE_URL}")
         print(f"Image publique: {args.image_url}")
         print(f"Caption:\n{draft['caption']}")
         return

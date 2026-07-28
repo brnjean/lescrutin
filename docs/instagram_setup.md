@@ -95,6 +95,7 @@ Publication reelle:
 ```bash
 export META_IG_USER_ID="..."
 export META_ACCESS_TOKEN="..."
+export META_GRAPH_HOST="graph.instagram.com"
 
 PYTHONPATH=src python publish_instagram.py \
   --draft outputs/draft-scrutin-8434.json \
