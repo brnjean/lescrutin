@@ -1,0 +1,234 @@
+{
+  "carousel_id": "europe-2026-07",
+  "month_start": "2026-07-01",
+  "month_end": "2026-07-31",
+  "instructions": "Trace des synthèses mensuelles Europe. Le flux automatique bloque si une description manque.",
+  "items": [
+    {
+      "id": "195719",
+      "date": "2026-07-09",
+      "title": "Euro numérique : négociations ouvertes",
+      "raw_title": "Establishment of the digital euro",
+      "description": "Le Parlement a autorisé l'ouverture des négociations avec le Conseil sur le projet d'euro numérique. Le texte encadre une monnaie électronique émise par la BCE, avec paiements en ligne ou hors ligne, garanties de confidentialité, services de base gratuits et maintien de l'accès au cash. Ce vote ne vaut pas adoption définitive : il fixe la position du Parlement pour négocier.",
+      "sources": [
+        {
+          "name": "European Parliament Open Data vote results",
+          "url": "https://data.europarl.europa.eu/api/v2/meetings/MTG-PL-2026-07-09/vote-results"
+        },
+        {
+          "url": "https://www.europarl.europa.eu/doceo/document/PV-10-2026-07-09-RCV_FR.xml",
+          "accessed_at": "2026-07-09T15:00:08.193013",
+          "name": "Results of roll-call votes (XML)"
+        },
+        {
+          "url": "https://oeil.europarl.europa.eu/oeil/en/procedure-file?reference=2023/0212(COD)",
+          "accessed_at": "2026-07-09T15:03:55.242158",
+          "name": "Procedure file (Legislative Observatory)"
+        },
+        {
+          "url": "https://www.europarl.europa.eu/news/en/press-room/20260708IPR46377",
+          "accessed_at": "2026-07-09T17:31:06.232634",
+          "name": "Press release"
+        },
+        {
+          "url": "https://www.europarl.europa.eu/doceo/document/PV-10-2026-07-09-VOT_EN.xml",
+          "accessed_at": "2026-07-10T19:00:06.211501",
+          "name": "Results of votes (XML)"
+        }
+      ]
+    },
+    {
+      "id": "195341",
+      "date": "2026-07-08",
+      "title": "OGM : objection à un maïs autorisé",
+      "raw_title": "Objection pursuant to Rule 115(2) and (3): Genetically modified maize DP202216 x NK603 x DAS-40278-9 and its sub-combinations DP 202216 x NK603, DP202216 x DAS-40278-9",
+      "description": "Les députés ont adopté une résolution s'opposant à l'autorisation de mise sur le marché de produits issus du maïs génétiquement modifié DP202216 x NK603 x DAS-40278-9. La décision visée venait de la Commission et concernait des aliments ou produits contenant, consistant en ou produits à partir de ce maïs. Une résolution d'objection exprime la position du Parlement face à une décision d'exécution.",
+      "sources": [
+        {
+          "name": "European Parliament Open Data vote results",
+          "url": "https://data.europarl.europa.eu/api/v2/meetings/MTG-PL-2026-07-08/vote-results"
+        },
+        {
+          "url": "https://www.europarl.europa.eu/doceo/document/PV-10-2026-07-08-RCV_FR.xml",
+          "accessed_at": "2026-07-08T15:00:08.787342",
+          "name": "Results of roll-call votes (XML)"
+        },
+        {
+          "url": "https://oeil.europarl.europa.eu/oeil/en/procedure-file?reference=2026/2746(RSP)",
+          "accessed_at": "2026-07-08T15:09:26.899155",
+          "name": "Procedure file (Legislative Observatory)"
+        },
+        {
+          "url": "https://www.europarl.europa.eu/doceo/document/PV-10-2026-07-08-VOT_EN.xml",
+          "accessed_at": "2026-07-09T19:00:07.216181",
+          "name": "Results of votes (XML)"
+        },
+        {
+          "url": "https://oeil.europarl.europa.eu/oeil/en/document-summary?id=1909008",
+          "accessed_at": "2026-07-27T05:09:22.536129",
+          "name": "Vote summary (Legislative Observatory)"
+        }
+      ]
+    },
+    {
+      "id": "195340",
+      "date": "2026-07-08",
+      "title": "OGM : objection à un soja autorisé",
+      "raw_title": "Objection pursuant to Rule 115(2) and (3): Genetically modified soybean MON 87705",
+      "description": "Le Parlement s'est opposé à une autorisation concernant des produits issus du soja génétiquement modifié MON 87705 x MON 87708 x MON 89788. Le vote porte sur une résolution d'objection à un projet de décision d'exécution de la Commission, dans le cadre des règles européennes sur les denrées et aliments génétiquement modifiés. Il s'agit d'une prise de position institutionnelle, pas d'une loi adoptée.",
+      "sources": [
+        {
+          "name": "European Parliament Open Data vote results",
+          "url": "https://data.europarl.europa.eu/api/v2/meetings/MTG-PL-2026-07-08/vote-results"
+        },
+        {
+          "url": "https://www.europarl.europa.eu/doceo/document/PV-10-2026-07-08-RCV_FR.xml",
+          "accessed_at": "2026-07-08T15:00:08.787341",
+          "name": "Results of roll-call votes (XML)"
+        },
+        {
+          "url": "https://oeil.europarl.europa.eu/oeil/en/procedure-file?reference=2025/2647(RSP)",
+          "accessed_at": "2026-07-08T15:09:26.899154",
+          "name": "Procedure file (Legislative Observatory)"
+        },
+        {
+          "url": "https://www.europarl.europa.eu/doceo/document/PV-10-2026-07-08-VOT_EN.xml",
+          "accessed_at": "2026-07-09T19:00:07.216181",
+          "name": "Results of votes (XML)"
+        }
+      ]
+    },
+    {
+      "id": "195543",
+      "date": "2026-07-08",
+      "title": "OGM : objection au maïs NK603 x T25",
+      "raw_title": "Objection pursuant to Rule 115(2) and (3): Genetically modified maize NK603 × T25",
+      "description": "Les députés ont adopté une résolution contre le renouvellement de l'autorisation de produits contenant, consistant en ou produits à partir du maïs génétiquement modifié NK603 x T25. Le texte vise une décision d'exécution de la Commission fondée sur le règlement européen relatif aux OGM dans l'alimentation humaine et animale. Le vote indique l'opposition du Parlement à cette autorisation.",
+      "sources": [
+        {
+          "name": "European Parliament Open Data vote results",
+          "url": "https://data.europarl.europa.eu/api/v2/meetings/MTG-PL-2026-07-08/vote-results"
+        },
+        {
+          "url": "https://www.europarl.europa.eu/doceo/document/PV-10-2026-07-08-RCV_FR.xml",
+          "accessed_at": "2026-07-08T15:00:08.787341",
+          "name": "Results of roll-call votes (XML)"
+        },
+        {
+          "url": "https://oeil.europarl.europa.eu/oeil/en/procedure-file?reference=2026/2745(RSP)",
+          "accessed_at": "2026-07-08T15:09:26.899218",
+          "name": "Procedure file (Legislative Observatory)"
+        },
+        {
+          "url": "https://www.europarl.europa.eu/doceo/document/PV-10-2026-07-08-VOT_EN.xml",
+          "accessed_at": "2026-07-09T19:00:07.216180",
+          "name": "Results of votes (XML)"
+        }
+      ]
+    },
+    {
+      "id": "195638",
+      "date": "2026-07-08",
+      "title": "Chypre : résolution sur les femmes",
+      "raw_title": "The impact of the 1974 Turkish invasion on Cypriot women and girls, and the crimes committed by Turkish forces and consequences on gender equality",
+      "description": "Le Parlement a adopté une résolution sur les conséquences de l'invasion turque de 1974 pour les femmes et les filles chypriotes. Le texte condamne l'occupation militaire, évoque les violences, déplacements forcés et séparations familiales, et demande des réparations pour les victimes. Une résolution fixe une position politique du Parlement européen, sans être directement une loi applicable.",
+      "sources": [
+        {
+          "name": "European Parliament Open Data vote results",
+          "url": "https://data.europarl.europa.eu/api/v2/meetings/MTG-PL-2026-07-08/vote-results"
+        },
+        {
+          "url": "https://www.europarl.europa.eu/doceo/document/PV-10-2026-07-08-RCV_FR.xml",
+          "accessed_at": "2026-07-08T15:00:08.787340",
+          "name": "Results of roll-call votes (XML)"
+        },
+        {
+          "url": "https://oeil.europarl.europa.eu/oeil/en/procedure-file?reference=2026/2617(RSP)",
+          "accessed_at": "2026-07-08T15:09:26.899229",
+          "name": "Procedure file (Legislative Observatory)"
+        },
+        {
+          "url": "https://www.europarl.europa.eu/doceo/document/PV-10-2026-07-08-VOT_EN.xml",
+          "accessed_at": "2026-07-09T19:00:07.216180",
+          "name": "Results of votes (XML)"
+        },
+        {
+          "url": "https://oeil.europarl.europa.eu/oeil/en/document-summary?id=1909002",
+          "accessed_at": "2026-07-27T05:09:22.536128",
+          "name": "Vote summary (Legislative Observatory)"
+        }
+      ]
+    },
+    {
+      "id": "194935",
+      "date": "2026-07-08",
+      "title": "Serbie : rapport 2025 sur l'adhésion",
+      "raw_title": "2025 Commission report on Serbia",
+      "description": "Les députés ont adopté une résolution sur le rapport 2025 de la Commission concernant la Serbie. Le texte rappelle que l'avancement vers l'Union européenne dépend du respect de la démocratie, de l'État de droit, des droits fondamentaux et de la mise en oeuvre effective des réformes. C'est une position politique sur le processus d'adhésion, pas une adoption législative.",
+      "sources": [
+        {
+          "name": "European Parliament Open Data vote results",
+          "url": "https://data.europarl.europa.eu/api/v2/meetings/MTG-PL-2026-07-08/vote-results"
+        },
+        {
+          "url": "https://www.europarl.europa.eu/doceo/document/PV-10-2026-07-08-RCV_FR.xml",
+          "accessed_at": "2026-07-08T15:00:08.787330",
+          "name": "Results of roll-call votes (XML)"
+        },
+        {
+          "url": "https://oeil.europarl.europa.eu/oeil/en/procedure-file?reference=2025/2255(INI)",
+          "accessed_at": "2026-07-08T15:09:26.899151",
+          "name": "Procedure file (Legislative Observatory)"
+        },
+        {
+          "url": "https://www.europarl.europa.eu/doceo/document/PV-10-2026-07-08-VOT_EN.xml",
+          "accessed_at": "2026-07-09T19:00:07.216168",
+          "name": "Results of votes (XML)"
+        },
+        {
+          "url": "https://oeil.europarl.europa.eu/oeil/en/document-summary?id=1909000",
+          "accessed_at": "2026-07-27T05:09:22.536128",
+          "name": "Vote summary (Legislative Observatory)"
+        }
+      ]
+    },
+    {
+      "id": "194917",
+      "date": "2026-07-08",
+      "title": "Moldavie : réformes et adhésion à l'UE",
+      "raw_title": "2025 Commission report on Moldova",
+      "description": "Le Parlement a adopté une résolution sur le rapport 2025 de la Commission concernant la Moldavie. Le texte souligne les progrès liés aux réformes européennes, notamment en matière de justice et de lutte contre la corruption, tout en signalant que les ingérences russes restent un risque majeur. Cette résolution accompagne le suivi politique du processus d'adhésion.",
+      "sources": [
+        {
+          "name": "European Parliament Open Data vote results",
+          "url": "https://data.europarl.europa.eu/api/v2/meetings/MTG-PL-2026-07-08/vote-results"
+        },
+        {
+          "url": "https://www.europarl.europa.eu/doceo/document/PV-10-2026-07-08-RCV_FR.xml",
+          "accessed_at": "2026-07-08T15:00:08.787329",
+          "name": "Results of roll-call votes (XML)"
+        },
+        {
+          "url": "https://oeil.europarl.europa.eu/oeil/en/procedure-file?reference=2025/2258(INI)",
+          "accessed_at": "2026-07-08T15:09:26.899149",
+          "name": "Procedure file (Legislative Observatory)"
+        },
+        {
+          "url": "https://www.europarl.europa.eu/news/en/press-room/20260706IPR46313",
+          "accessed_at": "2026-07-09T17:31:06.232637",
+          "name": "Press release"
+        },
+        {
+          "url": "https://www.europarl.europa.eu/doceo/document/PV-10-2026-07-08-VOT_EN.xml",
+          "accessed_at": "2026-07-09T19:00:07.216167",
+          "name": "Results of votes (XML)"
+        },
+        {
+          "url": "https://oeil.europarl.europa.eu/oeil/en/document-summary?id=1908998",
+          "accessed_at": "2026-07-27T05:09:22.536127",
+          "name": "Vote summary (Legislative Observatory)"
+        }
+      ]
+    }
+  ]
+}

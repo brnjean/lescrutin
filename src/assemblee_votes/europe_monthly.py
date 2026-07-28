@@ -270,7 +270,28 @@ def _has_official_ep_source(detail: dict[str, Any]) -> bool:
     return False
 
 
-def load_monthly_europe_votes(start: date, end: date, max_votes: int = 7) -> list[EuropeVote]:
+def _manual_copy_by_id(copy_path: Path) -> dict[str, dict[str, str]]:
+    if not copy_path.exists():
+        return {}
+    data = json.loads(copy_path.read_text(encoding="utf-8"))
+    copy: dict[str, dict[str, str]] = {}
+    for item in data.get("items", []):
+        vote_id = str(item.get("id") or item.get("numero") or "").strip()
+        description = " ".join(str(item.get("description") or "").split())
+        if vote_id and description:
+            copy[vote_id] = {
+                "title": " ".join(str(item.get("title") or "").split()),
+                "description": description,
+            }
+    return copy
+
+
+def load_monthly_europe_votes(
+    start: date,
+    end: date,
+    max_votes: int = 7,
+    manual_copy: dict[str, dict[str, str]] | None = None,
+) -> list[EuropeVote]:
     selected = _select_votes(_fetch_vote_list(start, end), max_votes)
     votes: list[EuropeVote] = []
     for item in selected:
@@ -278,7 +299,13 @@ def load_monthly_europe_votes(start: date, end: date, max_votes: int = 7) -> lis
         if not _has_official_ep_source(detail):
             print(f"Vote Europe ignore sans source officielle Parlement europeen: {item['id']}", flush=True)
             continue
-        title, description, has_summary = _summarize_vote(detail)
+        override = (manual_copy or {}).get(str(detail["id"]), {})
+        if override.get("description"):
+            title = override.get("title") or detail.get("display_title", "Vote européen")
+            description = override["description"]
+            has_summary = True
+        else:
+            title, description, has_summary = _summarize_vote(detail)
         stats = detail.get("stats") or {}
         totals = stats.get("total") or {}
         source_list = list(detail.get("sources", []))
@@ -550,15 +577,16 @@ def create_europe_monthly_carousel(
         end = datetime.strptime(end_date, "%Y-%m-%d").date() if end_date else _month_bounds(start)[1]
     else:
         start, end = _month_bounds(date.today())
-    votes = load_monthly_europe_votes(start, end, max_votes=max_vote_slides)
+    carousel_id = _month_id(start)
+    copy_path = Path(copy_dir) / f"{carousel_id}.json"
+    manual_copy = _manual_copy_by_id(copy_path)
+    votes = load_monthly_europe_votes(start, end, max_votes=max_vote_slides, manual_copy=manual_copy)
     if not votes:
         raise ValueError("Aucun vote européen exploitable pour ce mois.")
 
     missing = [int(vote.id) for vote in votes if not vote.description.strip()]
-    carousel_id = _month_id(start)
     out_dir = Path(output_dir) / carousel_id
     out_dir.mkdir(parents=True, exist_ok=True)
-    copy_path = Path(copy_dir) / f"{carousel_id}.json"
     copy_path.parent.mkdir(parents=True, exist_ok=True)
 
     total_slides = len(votes) + 3
