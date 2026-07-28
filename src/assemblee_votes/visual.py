@@ -107,6 +107,21 @@ def _draw_logo_badge(
     max_w: int,
     max_h: int,
 ) -> None:
+    if sigle == "non-inscrits":
+        font = _fit_font(draw, "inscrits", max_w - 8, 13, bold=True)
+        line_1 = "non-"
+        line_2 = "inscrits"
+        y0 = center_y - 16
+        for offset, line in enumerate((line_1, line_2)):
+            bbox = draw.textbbox((0, 0), line, font=font)
+            draw.text(
+                (center_x - (bbox[2] - bbox[0]) / 2, y0 + offset * 16),
+                line,
+                fill="#6F767D",
+                font=font,
+            )
+        return
+
     logo = _load_logo(sigle)
     if logo:
         _paste_contained(img, logo, (center_x - max_w // 2, center_y - max_h // 2, center_x + max_w // 2, center_y + max_h // 2))
@@ -142,7 +157,7 @@ def draw_card(scrutin: dict[str, Any], output: str | Path, config_path: str | Pa
     title_font = _font(62, bold=True)
     subtitle_font = _font(30)
     small_font = _font(22, bold=True)
-    footer_font = _font(19)
+    footer_font = _font(18)
 
     # Paper-like grid.
     for x in range(0, SIZE, 36):
@@ -174,7 +189,7 @@ def draw_card(scrutin: dict[str, Any], output: str | Path, config_path: str | Pa
         legend_x += 160
 
     chart_top = 432
-    chart_bottom = 818
+    chart_bottom = 804
     axis_x = 98
     chart_left = 112
     chart_right = SIZE - 54
@@ -216,22 +231,26 @@ def draw_card(scrutin: dict[str, Any], output: str | Path, config_path: str | Pa
             group_config_by_sigle,
             group["sigle"],
             center_x=int(x0 + bar_width / 2),
-            center_y=chart_bottom + 44,
-            max_w=bar_width + gap + 6,
-            max_h=52,
+            center_y=chart_bottom + 42,
+            max_w=max(42, min(70, bar_width + gap - 8)),
+            max_h=46,
         )
 
     total_line = (
         f"TOTAL  POUR {scrutin['totals']['pour']}  /  CONTRE {scrutin['totals']['contre']}  /  "
         f"ABST. {scrutin['totals']['abstention']}"
     )
-    draw.text((MARGIN, 908), total_line, fill=layout["text"], font=small_font)
+    draw.text((MARGIN, 890), total_line, fill=layout["text"], font=small_font)
+
+    footer_top = 944
+    draw.rectangle((0, footer_top, SIZE, SIZE), fill="#111111")
     footer = f"Source : Assemblee nationale, scrutin public n°{scrutin['numero']} - {scrutin['source_url']}"
-    footer_y = 954
-    for line in _wrap(draw, footer, footer_font, SIZE - 2 * MARGIN, 2):
-        draw.text((MARGIN, footer_y), line, fill=layout["text"], font=footer_font)
+    footer_y = footer_top + 18
+    for line in _wrap(draw, footer, footer_font, SIZE - 2 * MARGIN - 180, 2):
+        draw.text((MARGIN, footer_y), line, fill=layout["background"], font=footer_font)
         footer_y += 26
-    draw.text((MARGIN, 1020), config.account_handle, fill=colors["pour"], font=small_font)
+    handle_w = _text_width(draw, config.account_handle, small_font)
+    draw.text((SIZE - MARGIN - handle_w, footer_top + 42), config.account_handle, fill=layout["background"], font=small_font)
 
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import time
@@ -47,6 +48,34 @@ def _get_json(url: str, params: dict[str, str], access_token: str) -> dict[str, 
     except urllib.error.HTTPError as exc:
         details = exc.read().decode("utf-8", errors="replace")
         raise RuntimeError(f"Erreur Meta API {exc.code}: {details}") from exc
+
+
+def _download_bytes(url: str) -> bytes:
+    req = urllib.request.Request(url, method="GET", headers={"User-Agent": "vote-card-bot/0.1"})
+    try:
+        with urllib.request.urlopen(req, timeout=60) as response:
+            return response.read()
+    except urllib.error.HTTPError as exc:
+        details = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"Impossible de lire l'image publique {url}: {details}") from exc
+
+
+def _sha256_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def _sha256_file(path: str | Path) -> str:
+    return _sha256_bytes(Path(path).read_bytes())
+
+
+def _verify_public_image_matches_draft(draft: dict[str, Any], image_url: str) -> None:
+    local_hash = _sha256_file(draft["image_path"])
+    public_hash = _sha256_bytes(_download_bytes(image_url))
+    if local_hash != public_hash:
+        raise SystemExit(
+            "Publication bloquee: l'image publique ne correspond pas a l'image locale validee. "
+            "Regenerer, stage_public_asset.py, git push, attendre GitHub Actions vert, puis retester."
+        )
 
 
 def _load_draft(path: str | Path) -> dict[str, Any]:
@@ -150,9 +179,10 @@ def main() -> None:
             "Publication bloquee: la verification source a echoue: "
             + "; ".join(verification.errors)
         )
+    _verify_public_image_matches_draft(draft, args.image_url)
 
     if args.dry_run:
-        print("Dry-run OK: brouillon approuve, source verifiee, publication non envoyee.")
+        print("Dry-run OK: brouillon approuve, source verifiee, image publique synchronisee, publication non envoyee.")
         print(f"Endpoint Meta: {GRAPH_BASE_URL}")
         print(f"Image publique: {args.image_url}")
         print(f"Caption:\n{draft['caption']}")
