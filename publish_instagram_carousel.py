@@ -28,6 +28,19 @@ def _sha256_file(path: str | Path) -> str:
 
 def _load_draft(path: str | Path) -> dict[str, Any]:
     draft = json.loads(Path(path).read_text(encoding="utf-8"))
+    missing = [
+        int(scrutin["numero"])
+        for scrutin in draft.get("scrutins", [])
+        if not str(scrutin.get("description") or "").strip()
+    ]
+    missing.extend(int(numero) for numero in draft.get("missing_copy", []))
+    missing = sorted(set(missing))
+    if missing:
+        raise SystemExit(
+            "Publication bloquee: textes hebdomadaires manquants pour les scrutins "
+            + ", ".join(str(numero) for numero in missing)
+            + f". Complete {draft.get('copy_path', 'weekly_copy/week-YYYY-MM-DD.json')} puis regenere."
+        )
     if draft.get("status") != "approved_by_human":
         raise SystemExit("Publication bloquee: le carrousel doit etre approuve.")
     return draft

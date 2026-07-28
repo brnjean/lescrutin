@@ -12,10 +12,10 @@ from typing import Any
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 from .fetch import _is_significant, _scrutin_number_from_name, normalize_scrutin
-from .descriptions import law_description
 from .stages import STAGE_ORDER, stage_label
 from .titles import editorial_title
 from .verify import verify_scrutin
+from .weekly_copy import descriptions_by_numero, load_or_create_weekly_copy
 
 
 SIZE = 1080
@@ -272,6 +272,7 @@ def draw_vote_slide(
     output: str | Path,
     slide_number: int,
     total_slides: int,
+    description: str,
 ) -> None:
     img, draw = _paper()
     stage = stage_label(scrutin.get("stage_id")).upper()
@@ -315,8 +316,8 @@ def draw_vote_slide(
     draw.text((MARGIN, y), f"Écart pour/contre : {margin} voix", fill="#5E5144", font=small_font)
     y += 62
 
-    description = law_description(scrutin)
-    _draw_wrapped(draw, (MARGIN, y), description, body_font, TEXT, SIZE - 2 * MARGIN, 38, 4)
+    text = description.strip() or "Texte à compléter avant publication."
+    _draw_wrapped(draw, (MARGIN, y), text, body_font, TEXT, SIZE - 2 * MARGIN, 38, 4)
 
     source = f"Source : Assemblée nationale, scrutin public n°{scrutin['numero']}"
     draw.text((MARGIN, SIZE - 104), source, fill="#5E5144", font=small_font)
@@ -417,6 +418,7 @@ def create_weekly_carousel(
     zip_bytes: bytes,
     config_path: str | Path = "groupes_politiques.json",
     output_dir: str | Path = "outputs/weekly",
+    copy_dir: str | Path = "weekly_copy",
     start_date: str | None = None,
     end_date: str | None = None,
     max_vote_slides: int = 7,
@@ -429,6 +431,8 @@ def create_weekly_carousel(
     week = _week_id(start)
     out_dir = Path(output_dir) / week
     out_dir.mkdir(parents=True, exist_ok=True)
+    copy_path, copy, missing_copy = load_or_create_weekly_copy(copy_dir, start, end, scrutins)
+    descriptions = descriptions_by_numero(copy)
 
     slides: list[dict[str, Any]] = []
     cover = out_dir / "slide-01-cover.png"
@@ -436,8 +440,17 @@ def create_weekly_carousel(
     slides.append({"kind": "cover", "path": cover.as_posix()})
     for index, scrutin in enumerate(scrutins, start=2):
         path = out_dir / f"slide-{index:02d}-scrutin-{scrutin['numero']}.png"
-        draw_vote_slide(scrutin, path, index, total_slides)
-        slides.append({"kind": "vote", "numero": scrutin["numero"], "uid": scrutin["uid"], "path": path.as_posix()})
+        description = descriptions.get(int(scrutin["numero"]), "")
+        draw_vote_slide(scrutin, path, index, total_slides, description)
+        slides.append(
+            {
+                "kind": "vote",
+                "numero": scrutin["numero"],
+                "uid": scrutin["uid"],
+                "path": path.as_posix(),
+                "description": description,
+            }
+        )
     definitions_path = out_dir / f"slide-{total_slides - 1:02d}-definitions.png"
     draw_definitions(definitions_path, total_slides - 1, total_slides)
     slides.append({"kind": "definitions", "path": definitions_path.as_posix()})
@@ -446,12 +459,14 @@ def create_weekly_carousel(
     slides.append({"kind": "cta", "path": cta_path.as_posix()})
 
     draft = {
-        "status": "approved_by_human",
-        "approval_mode": "automatic",
+        "status": "approved_by_human" if not missing_copy else "needs_human_copy",
+        "approval_mode": "manual_weekly_copy",
         "created_at": datetime.now(timezone.utc).isoformat(),
         "week_id": week,
         "week_start": start.isoformat(),
         "week_end": end.isoformat(),
+        "copy_path": copy_path.as_posix(),
+        "missing_copy": missing_copy,
         "caption": build_weekly_caption(start, end, scrutins),
         "slides": slides,
         "scrutins": [
@@ -460,7 +475,7 @@ def create_weekly_carousel(
                 "numero": scrutin["numero"],
                 "date": scrutin["date"],
                 "title": editorial_title(scrutin),
-                "description": law_description(scrutin),
+                "description": descriptions.get(int(scrutin["numero"]), ""),
                 "stage_id": scrutin.get("stage_id"),
                 "stage_label": stage_label(scrutin.get("stage_id")),
                 "source_url": scrutin["source_url"],

@@ -35,6 +35,7 @@ def main() -> None:
     parser.add_argument("--config", default="groupes_politiques.json")
     parser.add_argument("--published", default="published.json")
     parser.add_argument("--output-dir", default="outputs/weekly")
+    parser.add_argument("--copy-dir", default="weekly_copy")
     parser.add_argument("--public-dir", default="public")
     parser.add_argument("--public-base-url", default=os.getenv("PUBLIC_BASE_URL", "https://brnjean.github.io/lescrutin"))
     parser.add_argument("--start-date", default=os.getenv("WEEKLY_START_DATE"))
@@ -46,6 +47,7 @@ def main() -> None:
         _download_bytes(args.url),
         config_path=args.config,
         output_dir=args.output_dir,
+        copy_dir=args.copy_dir,
         start_date=args.start_date,
         end_date=args.end_date,
         max_vote_slides=args.max_vote_slides,

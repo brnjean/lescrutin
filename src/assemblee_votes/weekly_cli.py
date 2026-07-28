@@ -11,6 +11,7 @@ def main() -> None:
     parser.add_argument("--url", default=SCRUTINS_JSON_ZIP_URL)
     parser.add_argument("--config", default="groupes_politiques.json")
     parser.add_argument("--output-dir", default="outputs/weekly")
+    parser.add_argument("--copy-dir", default="weekly_copy")
     parser.add_argument("--start-date", help="Debut de semaine force, format YYYY-MM-DD.")
     parser.add_argument("--end-date", help="Fin de semaine forcee, format YYYY-MM-DD.")
     parser.add_argument("--max-vote-slides", type=int, default=7)
@@ -20,6 +21,7 @@ def main() -> None:
         _download_bytes(args.url),
         config_path=args.config,
         output_dir=args.output_dir,
+        copy_dir=args.copy_dir,
         start_date=args.start_date,
         end_date=args.end_date,
         max_vote_slides=args.max_vote_slides,

@@ -14,6 +14,15 @@ def _public_url(public_base_url: str | None, public_path: str) -> str | None:
     return f"{public_base_url.rstrip('/')}/{public_path.lstrip('/')}"
 
 
+def _missing_copy(draft: dict) -> list[int]:
+    missing = [int(numero) for numero in draft.get("missing_copy", [])]
+    for scrutin in draft.get("scrutins", []):
+        description = str(scrutin.get("description") or "").strip()
+        if not description:
+            missing.append(int(scrutin["numero"]))
+    return sorted(set(missing))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Place un carrousel hebdomadaire dans le dossier public.")
     parser.add_argument("--draft", required=True)
@@ -26,6 +35,14 @@ def main() -> None:
 
     draft_path = Path(args.draft)
     draft = json.loads(draft_path.read_text(encoding="utf-8"))
+    missing = _missing_copy(draft)
+    if missing:
+        copy_path = draft.get("copy_path", "weekly_copy/week-YYYY-MM-DD.json")
+        raise SystemExit(
+            "Mise en ligne bloquee: textes hebdomadaires manquants pour les scrutins "
+            + ", ".join(str(numero) for numero in missing)
+            + f". Remplis les descriptions dans {copy_path}, puis regenere le carrousel."
+        )
     if draft.get("status") != "approved_by_human":
         raise SystemExit("Mise en ligne bloquee: le brouillon hebdomadaire n'est pas approuve.")
 

@@ -75,7 +75,7 @@ Secrets GitHub necessaires:
 
 ## Carrousel hebdomadaire
 
-Le carrousel hebdomadaire resume les votes cles d'une semaine:
+Le carrousel hebdomadaire est semi-automatique: le robot choisit les votes cles, puis tu ecris les textes de chaque loi.
 
 - couverture editoriale;
 - une slide par texte;
@@ -85,6 +85,18 @@ Le carrousel hebdomadaire resume les votes cles d'une semaine:
 Il garde les memes trois niveaux que les posts individuels: lecture definitive, texte de CMP, nouvelle lecture.
 
 Generation locale:
+
+```bash
+PYTHONPATH=src python prepare_weekly_carousel.py
+```
+
+Cette commande cree aussi un fichier du type:
+
+```text
+weekly_copy/week-YYYY-MM-DD.json
+```
+
+Dans ce fichier, remplis chaque champ `description` avec tes 2-3 lignes. Puis regenere le carrousel pour intégrer tes textes:
 
 ```bash
 PYTHONPATH=src python prepare_weekly_carousel.py
@@ -100,7 +112,7 @@ PYTHONPATH=src python publish_instagram_carousel.py \
   --draft outputs/weekly/week-YYYY-MM-DD/draft-week-YYYY-MM-DD.json
 ```
 
-GitHub Actions peut aussi publier le carrousel automatiquement chaque lundi via le workflow `Auto publish weekly carousel`.
+Le robot bloque la mise en ligne si une description est vide. Le workflow GitHub `Prepare/publish weekly carousel` se lance manuellement depuis l'onglet `Actions`.
 
 ## Publication Instagram
 
