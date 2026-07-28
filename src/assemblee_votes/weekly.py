@@ -229,7 +229,6 @@ def draw_cover(
     output: str | Path,
     start: date,
     end: date,
-    vote_count: int,
     total_slides: int,
 ) -> None:
     if BACKGROUND_PATH.exists():
@@ -255,7 +254,7 @@ def draw_cover(
     _draw_wrapped(
         draw,
         (MARGIN, y),
-        f"{_week_label(start, end)} · {vote_count} votes clés repérés",
+        _week_label(start, end),
         subtitle,
         "#F2EBDF",
         SIZE - 2 * MARGIN,
@@ -393,7 +392,7 @@ def build_weekly_caption(start: date, end: date, scrutins: list[dict[str, Any]])
     lines = [
         f"Cette semaine à l'Assemblée · {_week_label(start, end)}",
         "",
-        f"{len(scrutins)} votes clés repérés :",
+        "Au programme :",
     ]
     for scrutin in scrutins:
         totals = scrutin["totals"]
@@ -436,7 +435,7 @@ def create_weekly_carousel(
 
     slides: list[dict[str, Any]] = []
     cover = out_dir / "slide-01-cover.png"
-    draw_cover(cover, start, end, len(scrutins), total_slides)
+    draw_cover(cover, start, end, total_slides)
     slides.append({"kind": "cover", "path": cover.as_posix()})
     for index, scrutin in enumerate(scrutins, start=2):
         path = out_dir / f"slide-{index:02d}-scrutin-{scrutin['numero']}.png"
