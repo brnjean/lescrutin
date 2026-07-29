@@ -1,0 +1,94 @@
+name: Publish manual vote
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/manual-vote.json"
+      - ".github/workflows/manual-vote.yml"
+  workflow_dispatch:
+    inputs:
+      numero:
+        description: "Numero du scrutin Assemblee nationale a publier"
+        required: true
+        type: string
+
+concurrency:
+  group: lescrutin-manual-vote
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event_name != 'push' || contains(github.event.head_commit.message, '[publish-vote-now]')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      PUBLIC_BASE_URL: https://brnjean.github.io/lescrutin
+      PUBLISH_IMAGE_BASE_URL: https://raw.githubusercontent.com/brnjean/lescrutin/main/public
+      META_GRAPH_HOST: graph.instagram.com
+      META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
+      META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+
+      - name: Determine target vote
+        id: target
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            numero="${{ inputs.numero }}"
+          else
+            numero="$(python -c 'import json; print(json.load(open(".github/manual-vote.json", encoding="utf-8"))["numero"])')"
+          fi
+          echo "numero=$numero" >> "$GITHUB_OUTPUT"
+
+      - name: Prepare manual vote post
+        run: |
+          PYTHONPATH=src python fetch_scrutins.py \
+            --numero "${{ steps.target.outputs.numero }}" \
+            --include-already-published \
+            --output work/manual-scrutin.json
+          PYTHONPATH=src python prepare_post.py \
+            --input work/manual-scrutin.json \
+            --output-dir outputs \
+            --config groupes_politiques.json
+          PYTHONPATH=src python approve_post.py \
+            "outputs/draft-scrutin-${{ steps.target.outputs.numero }}.json"
+          PYTHONPATH=src python -m assemblee_votes.stage \
+            --draft "outputs/draft-scrutin-${{ steps.target.outputs.numero }}.json" \
+            --public-dir public \
+            --public-base-url "$PUBLIC_BASE_URL"
+
+      - name: Upload generated card
+        uses: actions/upload-artifact@v4
+        with:
+          name: manual-vote-card-${{ steps.target.outputs.numero }}
+          path: outputs/scrutin-${{ steps.target.outputs.numero }}.png
+
+      - name: Commit public image
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public
+          git commit -m "Stage manual scrutin ${{ steps.target.outputs.numero }}" || exit 0
+          git push
+
+      - name: Publish to Instagram
+        run: |
+          test -n "$META_IG_USER_ID"
+          test -n "$META_ACCESS_TOKEN"
+          PYTHONPATH=src python publish_instagram.py \
+            --draft "outputs/draft-scrutin-${{ steps.target.outputs.numero }}.json" \
+            --input work/manual-scrutin.json \
+            --image-url "$PUBLISH_IMAGE_BASE_URL/posts/scrutin-${{ steps.target.outputs.numero }}.png"
+
+      - name: Commit published state
+        run: |
+          git add published.json
+          git commit -m "Mark manual scrutin ${{ steps.target.outputs.numero }} published" || exit 0
+          git push
