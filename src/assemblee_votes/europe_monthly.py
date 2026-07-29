@@ -3,6 +3,7 @@ from __future__ import annotations
 import calendar
 import html
 import json
+import math
 import os
 import re
 import textwrap
@@ -22,16 +23,19 @@ EP_OPEN_DATA_API = "https://data.europarl.europa.eu/api/v2"
 OPENAI_URL = "https://api.openai.com/v1/responses"
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
 
-SIZE = 1080
+WIDTH = 1080
+HEIGHT = 1350
+SIZE = WIDTH
 MARGIN = 72
 PAPER = "#F2EBDF"
 GRID = "#E3D9CA"
 TEXT = "#111111"
-EU_BLUE = "#164A7A"
-EU_GOLD = "#D6A400"
-FOR = "#164A7A"
-AGAINST = "#D8D0C4"
-ABSTENTION = "#8B6C4D"
+EU_BLUE = "#073B7A"
+EU_BLUE_2 = "#0E5AA3"
+EU_GOLD = "#F2C230"
+FOR = "#073B7A"
+AGAINST = "#D9D0C2"
+ABSTENTION = "#A87937"
 
 
 @dataclass(frozen=True)
@@ -391,49 +395,73 @@ def _draw_wrapped(
     return y
 
 
+def _fit_font(draw: ImageDraw.ImageDraw, text: str, max_width: int, start_size: int, min_size: int, bold: bool = True) -> ImageFont.ImageFont:
+    for size in range(start_size, min_size - 1, -2):
+        font = _font(size, bold=bold)
+        if _text_width(draw, text, font) <= max_width:
+            return font
+    return _font(min_size, bold=bold)
+
+
+def _sentence_limit(text: str, max_words: int = 40, max_sentences: int = 2) -> str:
+    clean = " ".join(text.split())
+    if not clean:
+        return ""
+    sentences = re.split(r"(?<=[.!?])\s+", clean)
+    selected = " ".join(sentence for sentence in sentences[:max_sentences] if sentence)
+    words = selected.split()
+    if len(words) > max_words:
+        selected = " ".join(words[:max_words]).rstrip(" ,;:") + "..."
+    return selected
+
+
 def _paper() -> tuple[Image.Image, ImageDraw.ImageDraw]:
-    img = Image.new("RGB", (SIZE, SIZE), PAPER)
+    img = Image.new("RGB", (WIDTH, HEIGHT), PAPER)
     draw = ImageDraw.Draw(img)
-    for x in range(0, SIZE, 36):
-        draw.line([(x, 0), (x, SIZE)], fill=GRID, width=1)
-    for y in range(0, SIZE, 36):
-        draw.line([(0, y), (SIZE, y)], fill=GRID, width=1)
+    for x in range(0, WIDTH, 36):
+        draw.line([(x, 0), (x, HEIGHT)], fill=GRID, width=1)
+    for y in range(0, HEIGHT, 36):
+        draw.line([(0, y), (WIDTH, y)], fill=GRID, width=1)
     return img, draw
 
 
 def _footer(draw: ImageDraw.ImageDraw, slide_number: int, total: int, dark: bool = False) -> None:
     fill = PAPER if dark else TEXT
     font = _font(20, bold=True)
-    draw.text((MARGIN, SIZE - 58), "@lescrutin", fill=fill, font=font)
+    draw.text((MARGIN, HEIGHT - 64), "@lescrutin", fill=fill, font=font)
     page = f"{slide_number}/{total}"
-    draw.text((SIZE - MARGIN - _text_width(draw, page, font), SIZE - 58), page, fill=fill, font=font)
+    draw.text((WIDTH - MARGIN - _text_width(draw, page, font), HEIGHT - 64), page, fill=fill, font=font)
 
 
 def draw_cover(output: str | Path, start: date, end: date, vote_count: int, total_slides: int) -> None:
-    img = Image.new("RGB", (SIZE, SIZE), EU_BLUE)
+    img = Image.new("RGB", (WIDTH, HEIGHT), EU_BLUE)
     draw = ImageDraw.Draw(img)
-    for x in range(-SIZE, SIZE * 2, 64):
-        draw.line([(x, 0), (x + SIZE, SIZE)], fill="#1E5F97", width=2)
+    for x in range(-HEIGHT, WIDTH * 2, 58):
+        draw.line([(x, 0), (x + HEIGHT, HEIGHT)], fill="#124D8E", width=2)
+    for y in range(92, HEIGHT - 160, 92):
+        draw.line((MARGIN, y, WIDTH - MARGIN, y), fill="#0B4482", width=1)
+    for i in range(12):
+        angle = i * 30
+        cx = WIDTH - 232 + int(120 * math.cos(math.radians(angle)))
+        cy = 228 + int(120 * math.sin(math.radians(angle)))
+        draw.ellipse((cx - 8, cy - 8, cx + 8, cy + 8), fill=EU_GOLD)
+    draw.rectangle((0, 0, WIDTH, 16), fill=EU_GOLD)
+    eyebrow = _font(25, bold=True)
     title = _font(76, bold=True)
-    subtitle = _font(30)
-    eyebrow = _font(26, bold=True)
-    draw.text((MARGIN, 92), "LE MOIS EUROPÉEN", fill=EU_GOLD, font=eyebrow)
-    y = 188
-    for line in ("CE MOIS-CI", "AU PARLEMENT", "EUROPÉEN"):
+    subtitle = _font(33)
+    sentence = _font(39, bold=True)
+    draw.text((MARGIN, 104), "LE SCRUTIN · EUROPE", fill=EU_GOLD, font=eyebrow)
+    y = 246
+    for line in ("Ce mois-ci", "au Parlement", "européen"):
         draw.text((MARGIN, y), line, fill="#FFFFFF", font=title)
-        y += 84
-    draw.rounded_rectangle((MARGIN, y + 14, MARGIN + 470, y + 24), radius=5, fill=EU_GOLD)
+        y += 88
+    draw.rounded_rectangle((MARGIN, y + 16, MARGIN + 610, y + 26), radius=5, fill=EU_GOLD)
+    y += 94
+    draw.text((MARGIN, y), f"Les votes à retenir · {_month_label(start)}", fill="#FFFFFF", font=subtitle)
     y += 82
-    _draw_wrapped(
-        draw,
-        (MARGIN, y),
-        f"{_month_label(start)} · {vote_count} votes principaux",
-        subtitle,
-        "#FFFFFF",
-        SIZE - 2 * MARGIN,
-        40,
-        2,
-    )
+    _draw_wrapped(draw, (MARGIN, y), "Ce que l'Europe a décidé, soutenu ou rejeté.", sentence, "#FFFFFF", WIDTH - 2 * MARGIN, 48, 2)
+    draw.rounded_rectangle((MARGIN, HEIGHT - 210, WIDTH - MARGIN, HEIGHT - 134), radius=10, outline=EU_GOLD, width=3)
+    draw.text((MARGIN + 28, HEIGHT - 190), f"{vote_count} votes européens sélectionnés", fill="#FFFFFF", font=_font(29, bold=True))
     _footer(draw, 1, total_slides, dark=True)
     Path(output).parent.mkdir(parents=True, exist_ok=True)
     img.save(output)
@@ -459,39 +487,64 @@ def _group_majorities(vote: EuropeVote) -> tuple[list[str], list[str], list[str]
 
 def draw_vote_slide(vote: EuropeVote, output: str | Path, slide_number: int, total_slides: int) -> None:
     img, draw = _paper()
-    badge = _font(24, bold=True)
-    title_font = _font(56, bold=True)
-    body_font = _font(27)
-    small = _font(23)
-    stat = _font(30, bold=True)
-    draw.rounded_rectangle((MARGIN, 72, MARGIN + 360, 118), radius=6, fill=EU_BLUE)
-    draw.text((MARGIN + 18, 82), "PARLEMENT EUROPÉEN", fill="#FFFFFF", font=badge)
-    draw.text((MARGIN, 144), f"Vote n°{vote.id} · {datetime.strptime(vote.date, '%Y-%m-%d').strftime('%d/%m/%Y')}", fill=TEXT, font=small)
-    y = _draw_wrapped(draw, (MARGIN, 202), vote.title.upper(), title_font, TEXT, SIZE - 2 * MARGIN, 62, 3)
-    draw.rounded_rectangle((MARGIN, y + 10, MARGIN + 390, y + 18), radius=4, fill=EU_GOLD)
-    y += 60
-    draw.text((MARGIN, y), vote.result, fill=TEXT, font=stat)
-    y += 58
+    draw.rectangle((0, 0, WIDTH, 14), fill=EU_BLUE)
+    draw.rectangle((0, 14, WIDTH, 20), fill=EU_GOLD)
+    badge = _font(22, bold=True)
+    title_font = _font(55, bold=True)
+    context_font = _font(23)
+    body_font = _font(26)
+    small = _font(22)
+    stat = _font(35, bold=True)
+    draw.rounded_rectangle((MARGIN, 66, MARGIN + 300, 110), radius=6, fill=EU_BLUE)
+    draw.text((MARGIN + 18, 76), "Parlement européen", fill="#FFFFFF", font=badge)
+    date_label = datetime.strptime(vote.date, "%Y-%m-%d").strftime("%d/%m/%Y")
+    draw.text((MARGIN, 136), f"Vote n°{vote.id} · {date_label}", fill="#5E5144", font=small)
+    y = _draw_wrapped(draw, (MARGIN, 188), vote.title, title_font, TEXT, WIDTH - 2 * MARGIN, 62, 3)
+    y += 18
+    status = vote.result.upper()
+    status_font = _fit_font(draw, status, 260, 36, 28, bold=True)
+    status_w = _text_width(draw, status, status_font) + 54
+    draw.rounded_rectangle((MARGIN, y, MARGIN + status_w, y + 52), radius=8, fill=EU_GOLD, outline=TEXT, width=2)
+    draw.text((MARGIN + 27, y + 9), status, fill=TEXT, font=status_font)
+    context = "Ce vote fixe la position du Parlement, ce n'est pas encore une adoption définitive."
+    _draw_wrapped(draw, (MARGIN + status_w + 28, y + 2), context, context_font, "#4D5660", WIDTH - 2 * MARGIN - status_w - 28, 30, 2)
+    y += 104
     totals = vote.totals
     total_votes = max(1, totals["pour"] + totals["contre"] + totals["abstention"])
     x = MARGIN
-    bar_y = y + 20
-    bar_w = SIZE - 2 * MARGIN
+    bar_y = y
+    bar_w = WIDTH - 2 * MARGIN
     for key, color in (("pour", FOR), ("contre", AGAINST), ("abstention", ABSTENTION)):
         width = int(bar_w * totals[key] / total_votes)
-        draw.rectangle((x, bar_y, x + width, bar_y + 34), fill=color)
+        draw.rectangle((x, bar_y, x + width, bar_y + 52), fill=color)
         x += width
-    draw.rectangle((MARGIN, bar_y, MARGIN + bar_w, bar_y + 34), outline=TEXT, width=2)
-    y = bar_y + 66
-    draw.text((MARGIN, y), f"{totals['pour']} pour / {totals['contre']} contre / {totals['abstention']} abst.", fill=TEXT, font=stat)
-    y += 58
+    draw.rectangle((MARGIN, bar_y, MARGIN + bar_w, bar_y + 52), outline=TEXT, width=2)
+    legend_y = bar_y + 68
+    legend_font = _font(20, bold=True)
+    lx = MARGIN
+    for key, label in (("pour", "POUR"), ("contre", "CONTRE"), ("abstention", "ABST.")):
+        draw.rectangle((lx, legend_y + 5, lx + 22, legend_y + 27), fill={"pour": FOR, "contre": AGAINST, "abstention": ABSTENTION}[key], outline=TEXT, width=1)
+        draw.text((lx + 32, legend_y), label, fill=TEXT, font=legend_font)
+        lx += 156
+    y = legend_y + 58
+    score = f"{totals['pour']} pour · {totals['contre']} contre · {totals['abstention']} abst."
+    draw.text((MARGIN, y), score, fill=TEXT, font=stat)
+    y += 82
     pour, contre, abst = _group_majorities(vote)
-    group_line = f"Majorités groupes · Pour : {', '.join(pour[:5]) or '-'} / Contre : {', '.join(contre[:4]) or '-'}"
-    y = _draw_wrapped(draw, (MARGIN, y), group_line, small, "#5E5144", SIZE - 2 * MARGIN, 31, 2)
-    y += 32
-    _draw_wrapped(draw, (MARGIN, y), vote.description, body_font, TEXT, SIZE - 2 * MARGIN, 34, 6)
-    source = "Sources : Parlement européen / HowTheyVote"
-    draw.text((MARGIN, SIZE - 104), source, fill="#5E5144", font=small)
+    col_w = (WIDTH - 2 * MARGIN - 26) // 2
+    box_h = 128
+    draw.rounded_rectangle((MARGIN, y, MARGIN + col_w, y + box_h), radius=8, fill="#FFFFFF", outline=GRID, width=2)
+    draw.rounded_rectangle((MARGIN + col_w + 26, y, WIDTH - MARGIN, y + box_h), radius=8, fill="#FFFFFF", outline=GRID, width=2)
+    draw.text((MARGIN + 22, y + 18), "Majorité pour", fill=FOR, font=_font(22, bold=True))
+    _draw_wrapped(draw, (MARGIN + 22, y + 54), ", ".join(pour[:4]) or "-", small, TEXT, col_w - 44, 28, 2)
+    draw.text((MARGIN + col_w + 48, y + 18), "Majorité contre", fill="#6F5F4F", font=_font(22, bold=True))
+    _draw_wrapped(draw, (MARGIN + col_w + 48, y + 54), ", ".join(contre[:4]) or "-", small, TEXT, col_w - 44, 28, 2)
+    y += box_h + 52
+    draw.text((MARGIN, y), "À retenir", fill=EU_BLUE, font=_font(25, bold=True))
+    y += 38
+    _draw_wrapped(draw, (MARGIN, y), _sentence_limit(vote.description), body_font, TEXT, WIDTH - 2 * MARGIN, 34, 4)
+    source = "Sources : Parlement européen · OEIL · HowTheyVote"
+    draw.text((MARGIN, HEIGHT - 118), source, fill="#5E5144", font=small)
     _footer(draw, slide_number, total_slides)
     Path(output).parent.mkdir(parents=True, exist_ok=True)
     img.save(output)
@@ -499,24 +552,26 @@ def draw_vote_slide(vote: EuropeVote, output: str | Path, slide_number: int, tot
 
 def draw_definitions(output: str | Path, slide_number: int, total_slides: int) -> None:
     img, draw = _paper()
-    title = _font(62, bold=True)
-    heading = _font(29, bold=True)
-    body = _font(26)
-    draw.text((MARGIN, 80), "COMPRENDRE", fill=TEXT, font=title)
-    draw.text((MARGIN, 146), "L'EUROPE", fill=TEXT, font=title)
-    draw.rounded_rectangle((MARGIN, 224, MARGIN + 420, 232), radius=4, fill=EU_GOLD)
-    y = 292
+    draw.rectangle((0, 0, WIDTH, 14), fill=EU_BLUE)
+    draw.rectangle((0, 14, WIDTH, 20), fill=EU_GOLD)
+    title = _font(65, bold=True)
+    heading = _font(31, bold=True)
+    body = _font(25)
+    draw.text((MARGIN, 94), "Comprendre", fill=TEXT, font=title)
+    draw.text((MARGIN, 166), "les mots de l'Europe", fill=EU_BLUE, font=title)
+    draw.rounded_rectangle((MARGIN, 260, MARGIN + 510, 270), radius=4, fill=EU_GOLD)
+    y = 336
     items = [
-        ("Règlement", "Texte applicable directement dans les États membres une fois adopté."),
-        ("Directive", "Objectif commun européen que chaque État doit transposer dans son droit national."),
-        ("Résolution", "Position politique du Parlement européen. Elle peut peser, sans être toujours une loi."),
-        ("Trilogues", "Négociations entre Parlement, Conseil et Commission pour parvenir à un texte commun."),
+        ("Règlement", "Une règle européenne directement applicable dans les États membres."),
+        ("Directive", "Un objectif commun que chaque État doit transposer dans son droit."),
+        ("Résolution", "Une position politique du Parlement, pas toujours une loi."),
+        ("Trilogue", "Une négociation entre Parlement, Conseil et Commission."),
     ]
     for h, b in items:
-        draw.text((MARGIN, y), h.upper(), fill=TEXT, font=heading)
-        y += 38
-        y = _draw_wrapped(draw, (MARGIN, y), b, body, TEXT, SIZE - 2 * MARGIN, 32, 2)
-        y += 34
+        draw.rounded_rectangle((MARGIN, y, WIDTH - MARGIN, y + 132), radius=8, fill="#FFFFFF", outline=GRID, width=2)
+        draw.text((MARGIN + 26, y + 22), h, fill=EU_BLUE, font=heading)
+        _draw_wrapped(draw, (MARGIN + 26, y + 66), b, body, TEXT, WIDTH - 2 * MARGIN - 52, 32, 1)
+        y += 160
     _footer(draw, slide_number, total_slides)
     Path(output).parent.mkdir(parents=True, exist_ok=True)
     img.save(output)
@@ -524,18 +579,20 @@ def draw_definitions(output: str | Path, slide_number: int, total_slides: int) -
 
 def draw_cta(output: str | Path, slide_number: int, total_slides: int) -> None:
     img, draw = _paper()
-    title = _font(64, bold=True)
-    body = _font(31)
-    y = 126
-    for line in ("SUIVRE", "CE QUI SE VOTE", "SANS SE PERDRE"):
-        draw.text((MARGIN, y), line, fill=TEXT, font=title)
-        y += 72
-    draw.rounded_rectangle((MARGIN, y + 8, MARGIN + 430, y + 16), radius=4, fill=EU_GOLD)
-    y += 84
-    y = _draw_wrapped(draw, (MARGIN, y), "Chaque mois, un résumé sourcé des votes importants au Parlement européen.", body, TEXT, SIZE - 2 * MARGIN, 42, 4)
-    y += 54
-    _draw_wrapped(draw, (MARGIN, y), "Projet bénévole, neutre et automatisé. Abonnez-vous pour le soutenir.", body, TEXT, SIZE - 2 * MARGIN, 42, 4)
-    draw.text((MARGIN, 790), "@lescrutin", fill=EU_BLUE, font=_font(42, bold=True))
+    draw.rectangle((0, 0, WIDTH, 18), fill=EU_BLUE)
+    title = _font(72, bold=True)
+    body = _font(32)
+    y = 138
+    for line in ("Suivre", "ce qui se vote,", "sans se perdre."):
+        draw.text((MARGIN, y), line, fill=TEXT if line != "sans se perdre." else EU_BLUE, font=title)
+        y += 84
+    draw.rounded_rectangle((MARGIN, y + 18, MARGIN + 540, y + 28), radius=4, fill=EU_GOLD)
+    y += 108
+    y = _draw_wrapped(draw, (MARGIN, y), "Projet bénévole, neutre et sourcé.", body, TEXT, WIDTH - 2 * MARGIN, 42, 2)
+    y += 64
+    _draw_wrapped(draw, (MARGIN, y), "Abonnez-vous pour suivre l'actualité politique française et européenne.", body, TEXT, WIDTH - 2 * MARGIN, 42, 3)
+    draw.rounded_rectangle((MARGIN, HEIGHT - 248, WIDTH - MARGIN, HEIGHT - 152), radius=12, fill=EU_BLUE)
+    draw.text((MARGIN + 34, HEIGHT - 222), "@lescrutin", fill="#FFFFFF", font=_font(40, bold=True))
     _footer(draw, slide_number, total_slides)
     Path(output).parent.mkdir(parents=True, exist_ok=True)
     img.save(output)
