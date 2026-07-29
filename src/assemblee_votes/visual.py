@@ -104,11 +104,21 @@ def _result_word(scrutin: dict[str, Any]) -> str:
 
 def _title_color(word: str, default: str) -> str:
     clean = word.upper().strip(".,;:!?()[]{}«»\"'")
+    normalized = clean.removeprefix("L'").removeprefix("D'").removeprefix("L’").removeprefix("D’")
     if "ÉTAT" in clean or "ETAT" in clean or clean in {"ASSEMBLÉE", "ASSEMBLEE"}:
         return "#0D3556"
-    if clean in {"PATRIMOINE", "IMMOBILIER", "LOGEMENT", "SÉCURITÉ", "SECURITE", "MINEURS"}:
+    if normalized in {
+        "AIDE",
+        "MOURIR",
+        "PATRIMOINE",
+        "IMMOBILIER",
+        "LOGEMENT",
+        "SÉCURITÉ",
+        "SECURITE",
+        "MINEURS",
+    }:
         return "#8A1028"
-    if clean in {"LOI", "VOTE", "TEXTE"}:
+    if normalized in {"DROIT", "LOI", "VOTE", "TEXTE"}:
         return "#A77A2D"
     return default
 
