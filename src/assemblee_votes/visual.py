@@ -118,7 +118,7 @@ def _title_color(word: str, default: str) -> str:
         "MINEURS",
     }:
         return "#8A1028"
-    if normalized in {"DROIT", "LOI", "VOTE", "TEXTE"}:
+    if normalized in {"LOI", "VOTE", "TEXTE"}:
         return "#A77A2D"
     return default
 
@@ -305,7 +305,7 @@ def draw_card(scrutin: dict[str, Any], output: str | Path, config_path: str | Pa
         _short_title(scrutin),
         WIDTH - 2 * MARGIN,
         max_lines=3,
-        start_size=70,
+        start_size=66,
         min_size=50,
         bold=True,
     )
