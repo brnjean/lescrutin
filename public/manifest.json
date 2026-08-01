@@ -1,6 +1,14 @@
 {
   "posts": [
     {
+      "numero": 8419,
+      "uid": "VTANR5L17V8419",
+      "image_path": "outputs/scrutin-8419.png",
+      "public_path": "posts/scrutin-8419.png",
+      "public_url": "https://brnjean.github.io/lescrutin/posts/scrutin-8419.png",
+      "staged_at": "2026-08-01T18:26:47.146276+00:00"
+    },
+    {
       "numero": 8433,
       "uid": "VTANR5L17V8433",
       "image_path": "outputs/scrutin-8433.png",

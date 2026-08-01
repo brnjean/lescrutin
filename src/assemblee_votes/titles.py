@@ -14,7 +14,7 @@ TITLE_OVERRIDES = (
     ("souverainete agricole", "Protéger la souveraineté agricole"),
     ("souverainete agricoles", "Protéger la souveraineté agricole"),
     ("montagne vivante", "Adapter la loi aux territoires de montagne"),
-    ("cardio-neuro-vasculaire", "Lutter contre les maladies cardio-neuro-vasculaires"),
+    ("cardio-neuro-vasculaire", "Prévenir les AVC et infarctus"),
     ("sport professionnel", "Organiser le sport professionnel"),
     ("conseil de paris", "Réformer les élections à Paris, Lyon et Marseille"),
 )

@@ -102,27 +102,55 @@ def _result_word(scrutin: dict[str, Any]) -> str:
     return "VOTE"
 
 
-def _title_color(word: str, default: str) -> str:
+def _visual_theme(scrutin: dict[str, Any]) -> dict[str, Any]:
+    text = " ".join(
+        str(scrutin.get(key) or "")
+        for key in ("titre", "objet", "dossier")
+    ).upper()
+    if "CARDIO" in text or "VASCULAIRE" in text:
+        return {
+            "accent": "#006D6F",
+            "secondary": "#2E7D5B",
+            "badge": "#0A4C55",
+            "top": ("#0A4C55", "#527C7B", "#D7A83C"),
+            "vote_colors": {
+                "pour": "#006D6F",
+                "contre": "#D9D0C1",
+                "abstention": "#A77945",
+            },
+            "accent_words": {"AVC", "INFARCTUS", "CARDIO", "NEURO", "VASCULAIRES"},
+        }
+    return {
+        "accent": "#8A1028",
+        "secondary": "#A77A2D",
+        "badge": "#0D3556",
+        "top": ("#173A59", "#4F6272", "#C8A44D"),
+        "vote_colors": {},
+        "accent_words": {
+            "AIDE",
+            "MOURIR",
+            "ORDRE",
+            "PUBLIC",
+            "PATRIMOINE",
+            "IMMOBILIER",
+            "TROUBLES",
+            "LOGEMENT",
+            "SÉCURITÉ",
+            "SECURITE",
+            "MINEURS",
+        },
+    }
+
+
+def _title_color(word: str, default: str, theme: dict[str, Any]) -> str:
     clean = word.upper().strip(".,;:!?()[]{}«»\"'")
     normalized = clean.removeprefix("L'").removeprefix("D'").removeprefix("L’").removeprefix("D’")
     if "ÉTAT" in clean or "ETAT" in clean or clean in {"ASSEMBLÉE", "ASSEMBLEE"}:
         return "#0D3556"
-    if normalized in {
-        "AIDE",
-        "MOURIR",
-        "ORDRE",
-        "PUBLIC",
-        "PATRIMOINE",
-        "IMMOBILIER",
-        "TROUBLES",
-        "LOGEMENT",
-        "SÉCURITÉ",
-        "SECURITE",
-        "MINEURS",
-    }:
-        return "#8A1028"
+    if normalized in theme["accent_words"]:
+        return theme["accent"]
     if normalized in {"LOI", "VOTE", "TEXTE"}:
-        return "#A77A2D"
+        return theme["secondary"]
     return default
 
 
@@ -146,6 +174,7 @@ def _draw_colored_title(
     max_width: int,
     line_height: int,
     max_lines: int,
+    theme: dict[str, Any],
 ) -> int:
     x, y = xy
     line: list[str] = []
@@ -166,13 +195,13 @@ def _draw_colored_title(
     for words in lines[:max_lines]:
         cursor = x
         for word in words:
-            draw.text((cursor, y), word, fill=_title_color(word, fill), font=font)
+            draw.text((cursor, y), word, fill=_title_color(word, fill, theme), font=font)
             cursor += _text_width(draw, word + " ", font)
         y += line_height
     return y
 
 
-def _draw_background_photo(img: Image.Image) -> None:
+def _draw_background_photo(img: Image.Image, theme: dict[str, Any]) -> None:
     if BACKGROUND_PATH.exists():
         photo = Image.open(BACKGROUND_PATH).convert("RGB")
         photo = ImageOps.fit(photo, (WIDTH, 780), method=Image.Resampling.LANCZOS, centering=(0.54, 0.48))
@@ -195,9 +224,10 @@ def _draw_background_photo(img: Image.Image) -> None:
                 fade_px[x, y] = alpha
         img.paste(photo, (0, 430), fade)
     draw = ImageDraw.Draw(img)
-    draw.rectangle((0, 0, 276, 10), fill="#173A59")
-    draw.rectangle((276, 0, 620, 10), fill="#4F6272")
-    draw.rectangle((620, 0, WIDTH, 10), fill="#C8A44D")
+    top_left, top_mid, top_right = theme["top"]
+    draw.rectangle((0, 0, 276, 10), fill=top_left)
+    draw.rectangle((276, 0, 620, 10), fill=top_mid)
+    draw.rectangle((620, 0, WIDTH, 10), fill=top_right)
 
 
 def _load_logo(sigle: str) -> Image.Image | None:
@@ -287,7 +317,8 @@ def _logo_box(sigle: str, slot_width: int) -> tuple[int, int]:
 
 def draw_card(scrutin: dict[str, Any], output: str | Path, config_path: str | Path = "groupes_politiques.json") -> None:
     config = load_config(config_path)
-    colors = config.vote_colors
+    theme = _visual_theme(scrutin)
+    colors = {**config.vote_colors, **theme["vote_colors"]}
     layout = config.layout_colors
     img = Image.new("RGB", (WIDTH, HEIGHT), layout["background"])
     draw = ImageDraw.Draw(img)
@@ -301,7 +332,7 @@ def draw_card(scrutin: dict[str, Any], output: str | Path, config_path: str | Pa
         draw.line([(x, 0), (x, HEIGHT)], fill=layout["grid"], width=1)
     for y in range(0, HEIGHT, 36):
         draw.line([(0, y), (WIDTH, y)], fill=layout["grid"], width=1)
-    _draw_background_photo(img)
+    _draw_background_photo(img, theme)
 
     title_font, title_lines = _fit_wrapped_font(
         draw,
@@ -322,10 +353,11 @@ def draw_card(scrutin: dict[str, Any], output: str | Path, config_path: str | Pa
         WIDTH - 2 * MARGIN,
         title_font.size + 6,
         3,
+        theme,
     )
 
     underline_y = y + 8
-    draw.rounded_rectangle((MARGIN, underline_y, min(WIDTH - MARGIN, MARGIN + 480), underline_y + 8), radius=4, fill=colors["pour"])
+    draw.rounded_rectangle((MARGIN, underline_y, min(WIDTH - MARGIN, MARGIN + 480), underline_y + 8), radius=4, fill=theme["accent"])
     draw.text(
         (MARGIN, underline_y + 28),
         f"Scrutin public n°{scrutin['numero']} · {_display_date(scrutin['date'])}",
@@ -338,14 +370,14 @@ def draw_card(scrutin: dict[str, Any], output: str | Path, config_path: str | Pa
     stage_font = _font(24, bold=True)
     stage_text = _stage_badge(scrutin)
     stage_w = _text_width(draw, stage_text, stage_font) + 36
-    draw.rounded_rectangle((MARGIN, badge_y, MARGIN + stage_w, badge_y + 44), radius=6, fill="#0D3556")
+    draw.rounded_rectangle((MARGIN, badge_y, MARGIN + stage_w, badge_y + 44), radius=6, fill=theme["badge"])
     draw.text((MARGIN + 18, badge_y + 9), stage_text, fill="#FFFFFF", font=stage_font)
 
     stamp_font = _font(30, bold=True)
     stamp_w = _text_width(draw, verdict, stamp_font) + 52
     stamp_x = WIDTH - MARGIN - stamp_w
-    draw.rounded_rectangle((stamp_x, badge_y - 4, WIDTH - MARGIN, badge_y + 42), radius=8, outline="#8A1028", width=3)
-    draw.text((stamp_x + 26, badge_y + 5), verdict, fill="#8A1028", font=stamp_font)
+    draw.rounded_rectangle((stamp_x, badge_y - 4, WIDTH - MARGIN, badge_y + 42), radius=8, outline=theme["accent"], width=3)
+    draw.text((stamp_x + 26, badge_y + 5), verdict, fill=theme["accent"], font=stamp_font)
 
     legend_y = badge_y + 72
     legend_x = MARGIN
