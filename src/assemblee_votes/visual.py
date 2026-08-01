@@ -110,8 +110,11 @@ def _title_color(word: str, default: str) -> str:
     if normalized in {
         "AIDE",
         "MOURIR",
+        "ORDRE",
+        "PUBLIC",
         "PATRIMOINE",
         "IMMOBILIER",
+        "TROUBLES",
         "LOGEMENT",
         "SÉCURITÉ",
         "SECURITE",
